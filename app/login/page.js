@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation"; // Import useRouter for redirection
 
 export default function AuthForm() {
     const [isLoginMode, setIsLoginMode] = useState(false); // Toggle between login and signup
@@ -10,6 +11,7 @@ export default function AuthForm() {
     const [password, setPassword] = useState('');
     const [phoneNumber, setPhoneNumber] = useState(''); // New state for phone number
     const [profile, setProfile] = useState(null); // Store the user profile details
+    const router = useRouter(); // Hook to handle redirection
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,7 +22,6 @@ export default function AuthForm() {
                 alert('Login successful!');
                 // Fetch profile after login
                 fetchProfile(email); // Pass email directly
-                router.push('/task');
             } else {
                 // Signup logic
                 await axios.post('https://automate-business-backend.vercel.app/api/auth/register', {
@@ -51,34 +52,42 @@ export default function AuthForm() {
             {!profile ? (
                 <form onSubmit={handleSubmit}>
                     {!isLoginMode && (
-                        <>
+                        <div className="my-5">
                             <input
+                                className="px-5 py-2 mx-5 rounded-md bg-slate-200"
                                 type="text"
                                 placeholder="Name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                             />
                             <input
+                                className="px-5 py-2 mx-5 rounded-md bg-slate-200"
                                 type="tel"
                                 placeholder="Phone Number"
                                 value={phoneNumber}
                                 onChange={(e) => setPhoneNumber(e.target.value)}
                             />
-                        </>
+                        </div>
                     )}
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <button type="submit">{isLoginMode ? 'Login' : 'Signup'}</button>
+                    <div>
+                        <div className="my-5">
+                            <input
+                                className="px-5 py-2 mx-5 rounded-md bg-slate-200"
+                                type="email"
+                                placeholder="Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <input
+                                className="px-5 py-2 mx-5 rounded-md bg-slate-200"
+                                type="password"
+                                placeholder="Password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <button className="px-5 py-2 my-5 mx-5 rounded-md bg-slate-200" type="submit">{isLoginMode ? 'Login' : 'Signup'}</button>
+                    </div>
                 </form>
             ) : (
                 <div style={{ marginTop: '20px' }}>
@@ -87,11 +96,14 @@ export default function AuthForm() {
                     <p><strong>Email:</strong> {profile.email}</p>
                     <p><strong>Phone Number:</strong> {profile.phoneNumber}</p>
                     <p><strong>Role:</strong> {profile.role}</p>
-                    <button onClick={() => setProfile(null)}>Logout</button>
+                    <div className="flex gap-5">
+                        <button className="px-5 py-2 mx-5 rounded-md bg-slate-200" onClick={() => setProfile(null)}>Logout</button>
+                        <button className="px-5 py-2 mx-5 rounded-md bg-slate-300" onClick={() => router.push('/task')}>Task</button>
+                    </div>
                 </div>
             )}
             {!profile && (
-                <button onClick={() => setIsLoginMode(!isLoginMode)}>
+                <button className="px-5 py-2 mx-5 rounded-md bg-slate-200" onClick={() => setIsLoginMode(!isLoginMode)}>
                     Switch to {isLoginMode ? 'Signup' : 'Login'}
                 </button>
             )}

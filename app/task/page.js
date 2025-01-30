@@ -106,11 +106,12 @@ export default function AssignTask() {
 
     return (
         <div style={{ padding: "20px" }}>
-            <h1>Task Management</h1>
+            <h1 className="px-5 py-2 mx-5">Task Management</h1>
 
             {/* Filter Tasks by User */}
-            <h2>Filter Tasks</h2>
+            <h2 className="px-5 py-2 mx-5 mt-5">Filter Tasks</h2>
             <select
+                className="px-5 py-2 mx-5 rounded-md bg-slate-200"
                 value={filteredUserId}
                 onChange={(e) => handleUserFilterChange(e.target.value)}
                 style={{ display: "block", marginBottom: "20px", width: "300px" }}
@@ -124,9 +125,10 @@ export default function AssignTask() {
             </select>
 
             {/* Create Task Section */}
-            <h2>Create Task</h2>
+            <h2 className="px-5 py-2 mx-5 mt-5">Create Task</h2>
             <form onSubmit={handleCreateTask}>
                 <input
+                    className="px-5 py-2 mx-5 rounded-md bg-slate-200"
                     type="text"
                     placeholder="Task Title"
                     value={title}
@@ -134,12 +136,14 @@ export default function AssignTask() {
                     style={{ display: "block", marginBottom: "10px", width: "300px" }}
                 />
                 <textarea
+                    className="px-5 py-2 mx-5 rounded-md bg-slate-200"
                     placeholder="Task Description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     style={{ display: "block", marginBottom: "10px", width: "300px", height: "100px" }}
                 ></textarea>
                 <select
+                    className="px-5 py-2 mx-5 rounded-md bg-slate-200"
                     value={assignedBy}
                     onChange={(e) => setAssignedBy(e.target.value)}
                     style={{ display: "block", marginBottom: "10px", width: "300px" }}
@@ -152,6 +156,7 @@ export default function AssignTask() {
                     ))}
                 </select>
                 <select
+                    className="px-5 py-2 mx-5 rounded-md bg-slate-200"
                     value={assignedTo}
                     onChange={(e) => setAssignedTo(e.target.value)}
                     style={{ display: "block", marginBottom: "10px", width: "300px" }}
@@ -163,15 +168,16 @@ export default function AssignTask() {
                         </option>
                     ))}
                 </select>
-                <button type="submit" style={{ padding: "10px 20px" }}>
+                <button className="px-5 py-2 mx-5 rounded-md bg-slate-200" type="submit" style={{ padding: "10px 20px" }}>
                     Create Task
                 </button>
             </form>
 
             {/* Reassign Task Section */}
-            <h2>Reassign Task</h2>
+            <h2 className="px-5 py-2 mx-5 mt-5">Reassign Task</h2>
             <form onSubmit={handleReassignTask}>
                 <select
+                    className="px-5 py-2 mx-5 rounded-md bg-slate-200"
                     value={taskToReassign}
                     onChange={(e) => setTaskToReassign(e.target.value)}
                     style={{ display: "block", marginBottom: "10px", width: "300px" }}
@@ -184,6 +190,7 @@ export default function AssignTask() {
                     ))}
                 </select>
                 <select
+                    className="px-5 py-2 mx-5 rounded-md bg-slate-200"
                     value={newAssignedTo}
                     onChange={(e) => setNewAssignedTo(e.target.value)}
                     style={{ display: "block", marginBottom: "10px", width: "300px" }}
@@ -195,16 +202,16 @@ export default function AssignTask() {
                         </option>
                     ))}
                 </select>
-                <button type="submit" style={{ padding: "10px 20px" }}>
+                <button className="px-5 py-2 mx-5 rounded-md bg-slate-200" type="submit" style={{ padding: "10px 20px" }}>
                     Reassign Task
                 </button>
             </form>
 
             {/* Task List */}
-            <h2>Task List</h2>
+            <h2 className="px-5 py-2 mx-5 mt-5">Task List</h2>
             <ul>
                 {tasks.map((task) => (
-                    <li key={task._id} style={{ marginBottom: "10px" }}>
+                    <li className="px-5 py-2 mx-5 rounded-md bg-slate-200" key={task._id} style={{ marginBottom: "10px" }}>
                         <strong>{task.title}</strong>: {task.description}
                         <br />
                         Assigned By: {task.assignedBy?.name || "Unknown"} | Assigned To: {task.assignedTo?.name || "Unknown"}
