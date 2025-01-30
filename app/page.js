@@ -11,9 +11,6 @@ export default function Home() {
             <Link href="/login">
                 <button style={{ marginRight: '10px', padding: '10px 20px', fontSize: '16px' }}>Log In</button>
             </Link>
-            <Link href="/register">
-                <button style={{ padding: '10px 20px', fontSize: '16px' }}>Register</button>
-            </Link>
         </div>
     </header>
 
