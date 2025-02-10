@@ -23,7 +23,7 @@ export default function Header() {
             {/* Left: Logo */}
             <div className="flex items-center mx-auto lg:ps-[110px]">
                 <img src="/img/logo.jpg" alt="Logo" className="h-8" />
-                <h1 className="text-xl font-semibold text-gray-800 dark:text-white ml-3">Automate Business</h1>
+                <h1 className="text-xl font-semibold text-gray-800 dark:text-white ml-3">Automate Galaxy</h1>
             </div>
 
             {/* Right: User Info & Notifications */}
