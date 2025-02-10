@@ -14,6 +14,10 @@ export default function AuthForm() {
         email: "",
         password: "",
         confirmPassword: "",
+        department: "",
+        designation: "",
+        employeeCode: "",
+        activeStatus: ""
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -62,23 +66,31 @@ export default function AuthForm() {
             // ✅ Extract user details from API response
             const userData = isSignup
                 ? {
-                      userId: data.userId,
-                      vendorId: data.vendorId,
-                      firstName: data.firstName,
-                      lastName: data.lastName,
-                      email: data.email,
-                      whatsappNumber: data.whatsappNumber,
-                      role: data.role,
-                  }
+                    userId: data.userId,
+                    vendorId: data.vendorId,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    email: data.email,
+                    whatsappNumber: data.whatsappNumber,
+                    role: data.role,
+                    /* department: data.department,
+                    designation: data.designation,
+                    employeeCode: data.employeeCode,
+                    activeStatus: data.activeStatus */
+                }
                 : {
-                      userId: data.userId,
-                      vendorId: data.vendorId,
-                      firstName: data.user.firstName,
-                      lastName: data.user.lastName,
-                      email: data.user.email,
-                      whatsappNumber: data.user.whatsappNumber,
-                      role: data.user.role,
-                  };
+                    userId: data.userId,
+                    vendorId: data.vendorId,
+                    firstName: data.user.firstName,
+                    lastName: data.user.lastName,
+                    email: data.user.email,
+                    whatsappNumber: data.user.whatsappNumber,
+                    role: data.user.role,
+                    department: data.user.department,
+                    designation: data.user.designation,
+                    employeeCode: data.user.employeeCode,
+                    activeStatus: data.user.activeStatus
+                };
 
             // ✅ Store user details in localStorage
             localStorage.setItem("userId", userData.userId);
@@ -86,14 +98,22 @@ export default function AuthForm() {
             localStorage.setItem("firstName", userData.firstName);
             localStorage.setItem("lastName", userData.lastName);
             localStorage.setItem("email", userData.email);
+            localStorage.setItem("department", userData.department);
+            localStorage.setItem("designation", userData.designation);
+            localStorage.setItem("employeeCode", userData.employeeCode);
+            localStorage.setItem("activeStatus", userData.activeStatus)
 
-             // ✅ Update global state using AuthContext
-             login({
+            // ✅ Update global state using AuthContext
+            login({
                 firstName: userData.firstName,
                 lastName: userData.lastName,
                 email: userData.email,
                 userId: userData.userId,
                 vendorId: userData.vendorId,
+                /* department: user.department,
+                designation: user.designation,
+                employeeCode: user.employeeCode,
+                activeStatus: user.activeStatus */
             });
 
             // ✅ Show success message
@@ -168,6 +188,64 @@ export default function AuthForm() {
                                     />
                                 </div>
                             </div>
+
+                            <div className="flex flex-col lg:flex-row gap-4">
+                                <div className="w-full lg:w-1/2 mb-3">
+                                    <label className="text-gray-700 text-sm">Department</label>
+                                    <input
+                                        type="text"
+                                        name="department"
+                                        className="w-full border p-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
+                                        placeholder="Enter first name"
+                                        value={formData.department}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="w-full lg:w-1/2 mb-3">
+                                    <label className="text-gray-700 text-sm">Designation</label>
+                                    <input
+                                        type="text"
+                                        name="designation"
+                                        className="w-full border p-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
+                                        placeholder="Enter last name"
+                                        value={formData.designation}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col lg:flex-row gap-4">
+                                <div className="w-full lg:w-1/2 mb-3">
+                                    <label className="text-gray-700 text-sm">Employee Code</label>
+                                    <input
+                                        type="text"
+                                        name="employeeCode"
+                                        className="w-full border p-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
+                                        placeholder="Enter first name"
+                                        value={formData.employeeCode}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="w-full lg:w-1/2 mb-3">
+                                    <label className="text-gray-700 text-sm">Status</label>
+                                    <input
+                                        type="text"
+                                        name="activeStatus"
+                                        className="w-full border p-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
+                                        placeholder="Enter last name"
+                                        value={formData.activeStatus}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            
 
                             {/* Email & WhatsApp Number in Same Row (Desktop) or Full Width (Mobile) */}
                             <div className="flex flex-col lg:flex-row gap-4">

@@ -14,9 +14,13 @@ export const AuthProvider = ({ children }) => {
         const email = localStorage.getItem("email") || "";
         const userId = localStorage.getItem("userId") || "";
         const vendorId = localStorage.getItem("vendorId") || "";
+        const department = localStorage.getItem("department") || "";
+        const designation = localStorage.getItem("designation") || "";
+        const employeeCode = localStorage.getItem("employeeCode") || "";
+        const activeStatus = localStorage.getItem("activeStatus") || "";
 
         if (firstName && lastName && email && userId && vendorId) {
-            setUser({ firstName, lastName, email, userId, vendorId });
+            setUser({ firstName, lastName, email, userId, vendorId, department, designation, employeeCode, activeStatus});
         }
     }, []);
 

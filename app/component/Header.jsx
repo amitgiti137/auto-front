@@ -38,7 +38,10 @@ export default function Header() {
                             className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-full"
                             onClick={() => setShowDropdown(!showDropdown)}
                         >
-                            <span className="font-bold">{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span>
+                            <span className="font-bold">
+                                {user?.firstName?.charAt(0) || "U"}
+                                {user?.lastName?.charAt(0) || ""}
+                            </span>
                         </button>
 
                         {/* Dropdown Menu */}
@@ -47,13 +50,14 @@ export default function Header() {
                                 {/* User Info */}
                                 <div className="flex items-center space-x-3 border-b pb-3">
                                     <div className="bg-blue-500 text-white w-10 h-10 flex items-center justify-center rounded-full">
-                                        {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+                                        {user?.firstName?.charAt(0) || "U"}
+                                        {user?.lastName?.charAt(0) || ""}
                                     </div>
                                     <div>
                                         <p className="text-lg font-semibold text-gray-800 dark:text-white">
-                                            {user.firstName} {user.lastName}
+                                            {user?.firstName || "User"} {user?.lastName || ""}
                                         </p>
-                                        <p className="text-gray-500 text-sm">{user.email}</p>
+                                        <p className="text-gray-500 text-sm">{user?.email || "No Email"}</p>
                                     </div>
                                 </div>
 
