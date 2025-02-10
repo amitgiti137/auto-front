@@ -21,7 +21,7 @@ export default function Header() {
     return (
         <div className="w-full bg-white dark:bg-gray-900 px-6 py-3 shadow-md flex justify-between items-center">
             {/* Left: Logo */}
-            <div className="flex items-center justify-center">
+            <div className="flex items-center mx-auto lg:ps-[110px]">
                 <img src="/img/logo.jpg" alt="Logo" className="h-8" />
                 <h1 className="text-xl font-semibold text-gray-800 dark:text-white ml-3">Automate Business</h1>
             </div>
