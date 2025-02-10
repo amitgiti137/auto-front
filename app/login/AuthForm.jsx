@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // ✅ Import for redirection
+import { useRouter } from "next/navigation";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useAuth } from "../context/AuthContext"; // ✅ Import Auth Context
 
 export default function AuthForm() {
     const [isSignup, setIsSignup] = useState(false);
@@ -17,8 +18,9 @@ export default function AuthForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState("");
-    const router = useRouter(); // ✅ Use router for navigation
-
+    const [success, setSuccess] = useState(""); // ✅ Store success message
+    const router = useRouter();
+    const { login } = useAuth(); // ✅ Use Auth Context
 
     // Handle Input Changes
     const handleChange = (e) => {
@@ -29,6 +31,7 @@ export default function AuthForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setSuccess(""); // ✅ Clear previous messages
 
         if (isSignup && formData.password !== formData.confirmPassword) {
             setError("Passwords do not match.");
@@ -41,8 +44,8 @@ export default function AuthForm() {
                 : "https://automate-business-backend.vercel.app/api/auth/login";
 
             const payload = isSignup
-                ? { ...formData } // Pass full data for Sign Up
-                : { email: formData.email, password: formData.password }; // Pass only email & password for Login
+                ? { ...formData }
+                : { email: formData.email, password: formData.password };
 
             const response = await fetch(endpoint, {
                 method: "POST",
@@ -50,24 +53,58 @@ export default function AuthForm() {
                 body: JSON.stringify(payload),
             });
 
-            if (!response.ok) throw new Error("Authentication failed");
-
             const data = await response.json();
 
-            // ✅ Store `userId` and `vendorId` in localStorage after successful login/register
-            localStorage.setItem("userId", data.userId);
-            localStorage.setItem("vendorId", data.vendorId);
-            /* localStorage.setItem("firstName", data.user.firstName);
-            localStorage.setItem("lastName", data.user.lastName);
-            localStorage.setItem("email", data.user.email); */
+            if (!response.ok) {
+                throw new Error(data.error || "Authentication failed");
+            }
 
-            console.log(`${isSignup ? "Signup" : "Login"} successful`);
-            alert(`${isSignup ? "Account Created Successfully" : "Login Successful"}`);
+            // ✅ Extract user details from API response
+            const userData = isSignup
+                ? {
+                      userId: data.userId,
+                      vendorId: data.vendorId,
+                      firstName: data.firstName,
+                      lastName: data.lastName,
+                      email: data.email,
+                      whatsappNumber: data.whatsappNumber,
+                      role: data.role,
+                  }
+                : {
+                      userId: data.userId,
+                      vendorId: data.vendorId,
+                      firstName: data.user.firstName,
+                      lastName: data.user.lastName,
+                      email: data.user.email,
+                      whatsappNumber: data.user.whatsappNumber,
+                      role: data.user.role,
+                  };
 
-            // ✅ Redirect to Dashboard
-            router.push("/myapp");
+            // ✅ Store user details in localStorage
+            localStorage.setItem("userId", userData.userId);
+            localStorage.setItem("vendorId", userData.vendorId);
+            localStorage.setItem("firstName", userData.firstName);
+            localStorage.setItem("lastName", userData.lastName);
+            localStorage.setItem("email", userData.email);
+
+             // ✅ Update global state using AuthContext
+             login({
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                email: userData.email,
+                userId: userData.userId,
+                vendorId: userData.vendorId,
+            });
+
+            // ✅ Show success message
+            setSuccess(isSignup ? "Account Created Successfully!" : "Login Successful!");
+
+            // ✅ Redirect to My Apps after a short delay
+            setTimeout(() => {
+                router.push("/myapp");
+            }, 100);
         } catch (error) {
-            setError("Invalid credentials or user already exists.");
+            setError(error.message);
         }
     };
 
