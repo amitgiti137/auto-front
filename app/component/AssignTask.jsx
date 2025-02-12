@@ -102,12 +102,13 @@ export default function AssignTask({ isOpen, setIsOpen }) {
     
         } catch (error) {
             console.error("Error in creating task:", error);
-            setError("Error creating task. Please try again.");
+            setError(error);
         } finally {
             setLoading(false);
         }
     };
     
+
 
     if (!isOpen) return null;
 
