@@ -27,6 +27,7 @@ export default function AssignTask() {
         try {
             const res = await axios.get(`${API_BASE_URL}/api/auth/users`);
             setEmployees(res.data);
+            console.log(res.data);
         } catch (err) {
             console.error("Failed to fetch employees:", err);
         }
@@ -57,8 +58,8 @@ export default function AssignTask() {
             const res = await axios.post(`${API_BASE_URL}/api/tasks/`, {
                 title,
                 description,
-                assignedBy,
-                assignedTo,
+                assignedBy: Number(assignedBy), // Ensure it's a number
+                assignedTo: [Number(assignedTo)], // Ensure array of numbers
             });
             alert(res.data.message);
             setTitle("");
@@ -82,7 +83,7 @@ export default function AssignTask() {
 
         try {
             const res = await axios.put(`${API_BASE_URL}/api/tasks/reassign/${taskToReassign}`, {
-                newAssignedTo,
+                newAssignedTo: [Number(newAssignedTo)],  // ✅ Ensure userId is a number
             });
             alert(res.data.message);
             setTaskToReassign("");
@@ -118,8 +119,8 @@ export default function AssignTask() {
             >
                 <option value="">All Users</option>
                 {employees.map((emp) => (
-                    <option key={emp._id} value={emp._id}>
-                        {emp.name}
+                    <option key={emp.userId} value={emp.userId}>
+                        {emp.firstName} {emp.lastName}
                     </option>
                 ))}
             </select>
@@ -150,9 +151,9 @@ export default function AssignTask() {
                 >
                     <option value="">Assigned By</option>
                     {employees.map((emp) => (
-                        <option key={emp._id} value={emp._id}>
-                            {emp.name}
-                        </option>
+                        <option key={emp.userId} value={emp.userId}>
+                        {emp.firstName} {emp.lastName}
+                    </option>
                     ))}
                 </select>
                 <select
@@ -163,9 +164,9 @@ export default function AssignTask() {
                 >
                     <option value="">Assigned To</option>
                     {employees.map((emp) => (
-                        <option key={emp._id} value={emp._id}>
-                            {emp.name}
-                        </option>
+                        <option key={emp.userId} value={emp.userId}>
+                        {emp.firstName} {emp.lastName}
+                    </option>
                     ))}
                 </select>
                 <button className="px-5 py-2 mx-5 rounded-md bg-slate-200" type="submit" style={{ padding: "10px 20px" }}>
@@ -197,9 +198,9 @@ export default function AssignTask() {
                 >
                     <option value="">New Assigned To</option>
                     {employees.map((emp) => (
-                        <option key={emp._id} value={emp._id}>
-                            {emp.name}
-                        </option>
+                        <option key={emp.userId} value={emp.userId}>
+                        {emp.firstName} {emp.lastName}
+                    </option>
                     ))}
                 </select>
                 <button className="px-5 py-2 mx-5 rounded-md bg-slate-200" type="submit" style={{ padding: "10px 20px" }}>
@@ -212,10 +213,13 @@ export default function AssignTask() {
             <ul>
                 {tasks.map((task) => (
                     <li className="px-5 py-2 mx-5 rounded-md bg-slate-200" key={task._id} style={{ marginBottom: "10px" }}>
-                        <strong>{task.title}</strong>: {task.description}
-                        <br />
-                        Assigned By: {task.assignedBy?.name || "Unknown"} | Assigned To: {task.assignedTo?.name || "Unknown"}
-                    </li>
+                    <strong>{task.title}</strong>: {task.description}
+                    <br />
+                    Assigned By: {task.assignedBy?.name || "Unknown"} |
+                    Assigned To: {task.assignedTo.length > 0 
+                        ? task.assignedTo.map(user => user.name).join(', ') 
+                        : "Unknown"}
+                </li>
                 ))}
             </ul>
         </div>

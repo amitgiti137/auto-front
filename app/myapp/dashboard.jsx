@@ -28,7 +28,7 @@ export default function Dashboard() {
                 </div>
             ))} */}
 
-            <section className="py-[50px] mx-[8px] lg:mx-[125px]">
+            <section className="py-[50px] mx-[8 px] lg:mx-[125px]">
                 <div className="container mx-auto">
                     <div className="flex justify-center items-center">
                         <div className="w-full md:w-[24%] lg:w-[24%] bg-[#e3e3e3] rounded-md mb-5">
