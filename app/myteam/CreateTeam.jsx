@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
-export default function CreateTeamForm() {
+export default function CreateTeamForm({ closeModal }) {
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -72,6 +72,10 @@ export default function CreateTeamForm() {
             // ✅ Show success message
             setSuccess("Team Member Registered Successfully!");
 
+            setTimeout(() => {
+                closeModal(); // ✅ Close the modal
+            }, 1000);
+
             // ✅ Reset form after successful signup
             setFormData({
                 firstName: "",
@@ -93,7 +97,7 @@ export default function CreateTeamForm() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="min-h-screen pt-1 flex items-center justify-center bg-gray-100">
             <div className="bg-white p-6 rounded-lg shadow-lg w-[100%] lg:w-[65%] border border-gray-300">
                 {/* Logo */}
                 <div className="flex justify-center mb-1">
@@ -101,9 +105,14 @@ export default function CreateTeamForm() {
                 </div>
 
                 {/* Title */}
-                <h2 className="text-xl font-bold text-gray-800 text-center mb-4">
+                <h2 className="text-xl font-bold text-gray-800 text-center mb-2c">
                     Register a New Team Member
                 </h2>
+
+                {/* ✅ Close Button */}
+                <button className="absolute top-6 right-10 text-gray-600 hover:text-red-500" onClick={closeModal}>
+                    ✖
+                </button>
 
                 {/* Display Error / Success Messages */}
                 {error && <p className="text-red-500 text-sm text-center">{error}</p>}
@@ -168,32 +177,32 @@ export default function CreateTeamForm() {
                     </div>
 
                     <div className="flex flex-col lg:flex-row gap-4">
-                                <div className="w-full lg:w-1/2 mb-3">
-                                    <label className="text-gray-700 text-sm">Employee Code</label>
-                                    <input
-                                        type="text"
-                                        name="employeeCode"
-                                        className="w-full border p-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
-                                        placeholder="Enter first name"
-                                        value={formData.employeeCode}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
+                        <div className="w-full lg:w-1/2 mb-3">
+                            <label className="text-gray-700 text-sm">Employee Code</label>
+                            <input
+                                type="text"
+                                name="employeeCode"
+                                className="w-full border p-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
+                                placeholder="Enter first name"
+                                value={formData.employeeCode}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
 
-                                <div className="w-full lg:w-1/2 mb-3">
-                                    <label className="text-gray-700 text-sm">Status</label>
-                                    <input
-                                        type="text"
-                                        name="activeStatus"
-                                        className="w-full border p-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
-                                        placeholder="Enter last name"
-                                        value={formData.activeStatus}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                            </div>
+                        <div className="w-full lg:w-1/2 mb-3">
+                            <label className="text-gray-700 text-sm">Status</label>
+                            <input
+                                type="text"
+                                name="activeStatus"
+                                className="w-full border p-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-green-400"
+                                placeholder="Enter last name"
+                                value={formData.activeStatus}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                    </div>
 
                     <div className="flex flex-col lg:flex-row gap-4">
                         <div className="w-full lg:w-1/2 mb-3">

@@ -1,10 +1,11 @@
 import React from 'react'
-import CreateTeamForm from './CreateTeam'
+/* import CreateTeamForm from './CreateTeam' */
+import EmployeeList from './Team'
 
 const page = () => {
   return (
     <div>
-        <CreateTeamForm/>
+        <EmployeeList/>
     </div>
   )
 }
