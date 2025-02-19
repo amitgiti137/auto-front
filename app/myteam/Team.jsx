@@ -3,12 +3,14 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
 import CreateTeamForm from "./CreateTeam";
 
 const API_BASE_URL = "https://automate-business-backend.vercel.app"; // API URL
 
 export default function EmployeeList() {
     const { user } = useAuth(); // Get logged-in user
+    const router = useRouter();
     const [employees, setEmployees] = useState([]); // Store employee list
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -17,10 +19,13 @@ export default function EmployeeList() {
     // ✅ Fetch vendorId from localStorage
     const vendorId = typeof window !== "undefined" ? localStorage.getItem("vendorId") || "" : "";
 
-    // ✅ Fetch employees based on vendorId
-    useEffect(() => {
-        if (!vendorId) return;
-        fetchEmployees();
+     // ✅ Redirect to login if vendorId is missing
+     useEffect(() => {
+        if (!vendorId) {
+            router.push("/login"); // Redirect to login page
+        } else {
+            fetchEmployees();
+        }
     }, [vendorId]);
 
     const fetchEmployees = async () => {

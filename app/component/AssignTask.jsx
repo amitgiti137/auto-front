@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
 
 const API_BASE_URL = "https://automate-business-backend.vercel.app"; // API URL
 
 export default function AssignTask({ isOpen, setIsOpen }) {
     const { user } = useAuth(); // Get logged-in user
+    const router = useRouter();
     const [employees, setEmployees] = useState([]); // Store user list
     const [taskTitle, setTaskTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -27,24 +29,31 @@ export default function AssignTask({ isOpen, setIsOpen }) {
         return "";
     });
 
+
+
     // Fetch employees based on vendorId
-    useEffect(() => {
-        if (!vendorId) return;
 
-        const fetchEmployees = async () => {
-            try {
-                const res = await axios.get(`${API_BASE_URL}/api/create/employees?vendorId=${vendorId}`);
-                if (res.data.status) {
-                    setEmployees(res.data.employees);
-                } else {
-                    console.error("Error fetching employees:", res.data.message);
-                }
-            } catch (err) {
-                console.error("Failed to fetch employees:", err);
+
+    const fetchEmployees = async () => {
+        try {
+            const res = await axios.get(`${API_BASE_URL}/api/create/employees?vendorId=${vendorId}`);
+            if (res.data.status) {
+                setEmployees(res.data.employees);
+            } else {
+                console.error("Error fetching employees:", res.data.message);
             }
-        };
+        } catch (err) {
+            console.error("Failed to fetch employees:", err);
+        }
+    };
 
-        fetchEmployees();
+    // ✅ Redirect to login if vendorId is missing
+    useEffect(() => {
+        if (!vendorId) {
+            router.push("/login"); // Redirect to login page
+        } else {
+            fetchEmployees();
+        }
     }, [vendorId]);
 
     // Handle file selection
@@ -76,15 +85,15 @@ export default function AssignTask({ isOpen, setIsOpen }) {
             setError("Vendor ID is missing. Please refresh and try again.");
             return;
         }
-    
+
         /* if (selectedUsers.includes(user.employeeId)) {
             setError("You cannot assign a task to yourself.");
             return;
         } */
-    
+
         setLoading(true);
         setError("");
-    
+
         // ✅ Fix: Send JSON, not FormData
         const payload = {
             title: taskTitle,
@@ -96,22 +105,22 @@ export default function AssignTask({ isOpen, setIsOpen }) {
             assignedTo: selectedUsers.map(user => Number(user)), // ✅ Ensure assignedTo is an array of Numbers
             vendorId: Number(vendorId), // ✅ Include vendor ID
         };
-    
+
         try {
             const response = await fetch(`${API_BASE_URL}/api/taskall/`, {
                 method: "POST",
-                headers: { 
+                headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
                 body: JSON.stringify(payload), // ✅ Send JSON
             });
-    
+
             const data = await response.json();
             console.log("API Response:", data); // ✅ Debugging Step
-    
+
             if (!response.ok) throw new Error(data.error || "Failed to create task");
-    
+
             setTaskTitle("");
             setDescription("");
             setSelectedUsers([]);
@@ -120,7 +129,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
             setDueDate("");
             setFiles([]);
             setIsOpen(false); // Close popup after successful creation
-    
+
         } catch (error) {
             console.error("Error in creating task:", error);
             setError(error);
@@ -128,7 +137,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
             setLoading(false);
         }
     };
-    
+
 
 
     if (!isOpen) return null;
