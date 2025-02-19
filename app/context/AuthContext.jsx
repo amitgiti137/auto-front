@@ -12,15 +12,15 @@ export const AuthProvider = ({ children }) => {
         const firstName = localStorage.getItem("firstName") || "";
         const lastName = localStorage.getItem("lastName") || "";
         const email = localStorage.getItem("email") || "";
-        const userId = localStorage.getItem("userId") || "";
+        const employeeId = localStorage.getItem("employeeId") || "";
         const vendorId = localStorage.getItem("vendorId") || "";
         const department = localStorage.getItem("department") || "";
         const designation = localStorage.getItem("designation") || "";
         const employeeCode = localStorage.getItem("employeeCode") || "";
         const activeStatus = localStorage.getItem("activeStatus") || "";
 
-        if (firstName && lastName && email && userId && vendorId) {
-            setUser({ firstName, lastName, email, userId, vendorId, department, designation, employeeCode, activeStatus});
+        if (firstName && lastName && email && employeeId && vendorId) {
+            setUser({ firstName, lastName, email, employeeId, vendorId, department, designation, employeeCode, activeStatus});
         }
     }, []);
 

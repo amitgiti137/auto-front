@@ -3,6 +3,7 @@ import "./globals.css";
 import LeftSidebar from "./component/LeftSidebar";
 import Header from "./component/Header";
 import { AuthProvider } from "./context/AuthContext"; // ✅ Import AuthProvider
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,11 +27,13 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* ✅ Wrap everything inside AuthProvider */}
+        <AppRouterCacheProvider>
         <AuthProvider>
           <Header />
           <LeftSidebar />
           <main>{children}</main>
         </AuthProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

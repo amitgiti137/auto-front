@@ -19,18 +19,33 @@ export default function AssignTask({ isOpen, setIsOpen }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    // Fetch users from API when component mounts
+    // Fetch vendorId from localStorage/AuthContext on mount
+    const [vendorId, setVendorId] = useState(() => {
+        if (typeof window !== "undefined") {
+            return localStorage.getItem("vendorId") || "";
+        }
+        return "";
+    });
+
+    // Fetch employees based on vendorId
     useEffect(() => {
-        const fetchUsers = async () => {
+        if (!vendorId) return;
+
+        const fetchEmployees = async () => {
             try {
-                const res = await axios.get(`${API_BASE_URL}/api/auth/users`);
-                setEmployees(res.data);
+                const res = await axios.get(`${API_BASE_URL}/api/create/employees?vendorId=${vendorId}`);
+                if (res.data.status) {
+                    setEmployees(res.data.employees);
+                } else {
+                    console.error("Error fetching employees:", res.data.message);
+                }
             } catch (err) {
                 console.error("Failed to fetch employees:", err);
             }
         };
-        fetchUsers();
-    }, []);
+
+        fetchEmployees();
+    }, [vendorId]);
 
     // Handle file selection
     const handleFileChange = (event) => {
@@ -46,8 +61,8 @@ export default function AssignTask({ isOpen, setIsOpen }) {
     };
 
     // Remove a selected user
-    const removeUser = (userId) => {
-        setSelectedUsers(selectedUsers.filter((user) => user !== userId));
+    const removeUser = (employeeId) => {
+        setSelectedUsers(selectedUsers.filter((user) => user !== employeeId));
     };
 
     // Handle form submission
@@ -56,11 +71,16 @@ export default function AssignTask({ isOpen, setIsOpen }) {
             setError("Please fill in all required fields.");
             return;
         }
-    
-        if (selectedUsers.includes(user.userId)) {
-            setError("You cannot assign a task to yourself.");
+
+        if (!vendorId) {
+            setError("Vendor ID is missing. Please refresh and try again.");
             return;
         }
+    
+        /* if (selectedUsers.includes(user.employeeId)) {
+            setError("You cannot assign a task to yourself.");
+            return;
+        } */
     
         setLoading(true);
         setError("");
@@ -72,12 +92,13 @@ export default function AssignTask({ isOpen, setIsOpen }) {
             priority,
             category,
             dueDate,
-            assignedBy: Number(user.userId), // ✅ Ensure assignedBy is a Number
+            assignedBy: Number(user.employeeId), // ✅ Ensure assignedBy is a Number
             assignedTo: selectedUsers.map(user => Number(user)), // ✅ Ensure assignedTo is an array of Numbers
+            vendorId: Number(vendorId), // ✅ Include vendor ID
         };
     
         try {
-            const response = await fetch(`${API_BASE_URL}/api/tasks/`, {
+            const response = await fetch(`${API_BASE_URL}/api/taskall/`, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",
@@ -151,7 +172,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
                 <select className="w-full border p-2 rounded mb-3" onChange={handleUserSelection}>
                     <option value="">Select Users</option>
                     {employees.map((emp) => (
-                        <option key={emp.userId} value={emp.userId}>
+                        <option key={emp.employeeId} value={emp.employeeId}>
                             {emp.firstName} {emp.lastName}
                         </option>
                     ))}
@@ -162,12 +183,12 @@ export default function AssignTask({ isOpen, setIsOpen }) {
                     <div className="mb-3">
                         <p className="font-semibold">Assigned Users:</p>
                         <ul>
-                            {selectedUsers.map((userId, index) => {
-                                const user = employees.find((u) => u.userId === Number(userId));
+                            {selectedUsers.map((employeeId, index) => {
+                                const user = employees.find((u) => u.employeeId === Number(employeeId));
                                 return (
                                     <li key={index} className="flex justify-between items-center bg-gray-100 p-2 rounded my-1">
                                         {user ? `${user.firstName} ${user.lastName}` : "Unknown"}
-                                        <button className="text-red-500" onClick={() => removeUser(userId)}>Remove</button>
+                                        <button className="text-red-500" onClick={() => removeUser(employeeId)}>Remove</button>
                                     </li>
                                 );
                             })}
