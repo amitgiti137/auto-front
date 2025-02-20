@@ -19,7 +19,7 @@ export default function Header() {
     };
 
     return (
-        <div className="w-full bg-white dark:bg-gray-900 px-6 py-3 shadow-md flex justify-between items-center">
+        <div className="inset-0 w-full bg-white dark:bg-gray-900 px-6 py-3 shadow-md flex justify-between items-center">
             {/* Left: Logo */}
             <div className="flex items-center mx-auto lg:ps-[110px]">
                 <img src="/img/logo.jpg" alt="Logo" className="h-12" />

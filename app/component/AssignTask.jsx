@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/AuthContext";
+import { FaTrash } from "react-icons/fa";
+import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"; 
 
 const API_BASE_URL = "https://automate-business-backend.vercel.app"; // API URL
 
@@ -20,6 +22,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
     const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [isUserListOpen, setIsUserListOpen] = useState(false);
 
     // Fetch vendorId from localStorage/AuthContext on mount
     const [vendorId, setVendorId] = useState(() => {
@@ -62,16 +65,17 @@ export default function AssignTask({ isOpen, setIsOpen }) {
     };
 
     // Handle user selection
-    const handleUserSelection = (e) => {
-        const selectedUser = e.target.value;
-        if (selectedUser && !selectedUsers.includes(selectedUser)) {
-            setSelectedUsers([...selectedUsers, selectedUser]);
+    const handleUserSelection = (employeeId) => {
+        if (selectedUsers.includes(employeeId)) {
+            setSelectedUsers(selectedUsers.filter((id) => id !== employeeId));
+        } else {
+            setSelectedUsers([...selectedUsers, employeeId]);
         }
     };
 
     // Remove a selected user
     const removeUser = (employeeId) => {
-        setSelectedUsers(selectedUsers.filter((user) => user !== employeeId));
+        setSelectedUsers(selectedUsers.filter((id) => id !== employeeId));
     };
 
     // Handle form submission
@@ -144,7 +148,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
 
     return (
         <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+            className="fixed overflow-y-auto inset-0 pt-auto bg-black bg-opacity-50 flex justify-center items-center z-50"
             onClick={() => setIsOpen(false)}
         >
             <div
@@ -178,35 +182,56 @@ export default function AssignTask({ isOpen, setIsOpen }) {
                 />
 
                 {/* Select Users */}
-                <select className="w-full border p-2 rounded mb-3" onChange={handleUserSelection}>
-                    <option value="">Select Users</option>
-                    {employees.map((emp) => (
-                        <option key={emp.employeeId} value={emp.employeeId}>
-                            {emp.firstName} {emp.lastName}
-                        </option>
-                    ))}
-                </select>
+                <div className="mb-3 relative">
+                    {/* <p className="font-semibold">Select Team</p> */}
+                    <button
+                        className="w-full border p-2 rounded bg-gray-100 hover:bg-green-200 flex justify-between items-center"
+                        onClick={() => setIsUserListOpen(!isUserListOpen)}
+                    >
+                        {selectedUsers.length > 0
+                            ? `${selectedUsers.length} User(s) Selected`
+                            : "Select Team"}
+                        {isUserListOpen ? <IoMdArrowDropup size={20} /> : <IoMdArrowDropdown size={20} />}
+                    </button>
+
+                    {isUserListOpen && (
+                        <div className="absolute w-full bg-white border rounded shadow-lg mt-1 max-h-40 overflow-y-auto">
+                            {employees.map((emp) => (
+                                <label key={emp.employeeId} className="flex items-center gap-2 p-2 hover:bg-green-200 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedUsers.includes(emp.employeeId)}
+                                        onChange={() => handleUserSelection(emp.employeeId)}
+                                    />
+                                    {emp.firstName} {emp.lastName}
+                                </label>
+                            ))}
+                        </div>
+                    )}
+                </div>
 
                 {/* Display Selected Users */}
-                {selectedUsers.length > 0 && (
+                {/* {selectedUsers.length > 0 && (
                     <div className="mb-3">
                         <p className="font-semibold">Assigned Users:</p>
                         <ul>
-                            {selectedUsers.map((employeeId, index) => {
-                                const user = employees.find((u) => u.employeeId === Number(employeeId));
+                            {selectedUsers.map((employeeId) => {
+                                const user = employees.find((u) => u.employeeId === employeeId);
                                 return (
-                                    <li key={index} className="flex justify-between items-center bg-gray-100 p-2 rounded my-1">
+                                    <li key={employeeId} className="flex justify-between items-center bg-gray-100 p-2 rounded my-1">
                                         {user ? `${user.firstName} ${user.lastName}` : "Unknown"}
-                                        <button className="text-red-500" onClick={() => removeUser(employeeId)}>Remove</button>
+                                        <button className="text-red-500" onClick={() => removeUser(employeeId)}>
+                                            <FaTrash />
+                                        </button>
                                     </li>
                                 );
                             })}
                         </ul>
                     </div>
-                )}
+                )} */}
 
                 {/* Select Category */}
-                <select className="w-full border p-2 rounded mb-3" value={category} onChange={(e) => setCategory(e.target.value)}>
+                <select className="w-full hover:bg-green-100 border p-2 rounded mb-3" value={category} onChange={(e) => setCategory(e.target.value)}>
                     <option value="">Select Category</option>
                     <option value="HR">HR</option>
                     <option value="IT">IT</option>
@@ -216,11 +241,12 @@ export default function AssignTask({ isOpen, setIsOpen }) {
                 </select>
 
                 {/* Priority Selection */}
-                <div className="flex gap-2 mb-3">
-                    {["high", "medium", "low"].map((level) => (
+                <div className="flex items-center gap-5 mb-3">
+                <p className="font-semibold">Task Priority</p>
+                    {["High", "Medium", "Low"].map((level) => (
                         <button
                             key={level}
-                            className={`px-3 py-1 rounded ${priority === level ? "bg-green-500 text-white" : "bg-gray-200"}`}
+                            className={`px-3 py-1 rounded ${priority === level ? "bg-green-500 text-white" : "bg-gray-200 hover:bg-green-100"}`}
                             onClick={() => setPriority(level)}
                         >
                             {level}
@@ -229,6 +255,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
                 </div>
 
                 {/* Due Date */}
+                <p className="font-semibold">Due Date</p>
                 <input type="date" className="w-full border p-2 rounded mb-3" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
 
                 {/* File Upload */}
