@@ -19,7 +19,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
     const [category, setCategory] = useState("");
     const [priority, setPriority] = useState("high");
     const [dueDate, setDueDate] = useState("");
-    const [files, setFiles] = useState([]);
+    const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [isUserListOpen, setIsUserListOpen] = useState(false);
@@ -59,9 +59,21 @@ export default function AssignTask({ isOpen, setIsOpen }) {
         }
     }, [vendorId]);
 
-    // Handle file selection
+    // ✅ Handle file selection (Single file only)
     const handleFileChange = (event) => {
-        setFiles([...event.target.files]);
+        const selectedFile = event.target.files[0]; // ✅ Select first file
+        if (!selectedFile) return;
+        
+        const allowedTypes = ["image/jpeg", "image/png", "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+        
+        // ✅ Check if the selected file type is valid
+    if (!allowedTypes.includes(selectedFile.type)) {
+        setError("Invalid file type. Allowed: JPG, PNG, PDF, DOC, DOCX.");
+        return;
+    }
+
+        setFile(selectedFile);
+        setError("");
     };
 
     // Handle user selection
@@ -99,29 +111,40 @@ export default function AssignTask({ isOpen, setIsOpen }) {
         setError("");
 
         // ✅ Fix: Send JSON, not FormData
-        const payload = {
-            title: taskTitle,
-            description,
-            priority,
-            category,
-            dueDate,
-            assignedBy: Number(user.employeeId), // ✅ Ensure assignedBy is a Number
-            assignedTo: selectedUsers.map(user => Number(user)), // ✅ Ensure assignedTo is an array of Numbers
-            vendorId: Number(vendorId), // ✅ Include vendor ID
-        };
+        const formData = new FormData();
+        formData.append("title", taskTitle);
+        formData.append("description", description);
+        formData.append("priority", priority);
+        formData.append("category", category);
+        formData.append("dueDate", dueDate);
+        formData.append("assignedBy", Number(user.employeeId));
+        formData.append("vendorId", Number(vendorId));
+
+        // ✅ Append selectedUsers (Array needs to be stringified)
+        selectedUsers.forEach(userId => {
+            formData.append("assignedTo", userId);
+        });
+
+        // ✅ Append file if available
+        if (file) {
+            formData.append("attachment", file);
+        }
+
+        // ✅ Log formData for debugging
+        console.log("FormData before sending:");
+        for (let pair of formData.entries()) {
+            console.log(pair[0], pair[1]);
+        }   
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/taskall/`, {
-                method: "POST",
+            const response = await axios.post(`${API_BASE_URL}/api/taskall/`, formData, {
                 headers: {
-                    "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
-                body: JSON.stringify(payload), // ✅ Send JSON
+                withCredentials: true,
             });
 
-            const data = await response.json();
-            console.log("API Response:", data); // ✅ Debugging Step
+            console.log("API Response:", response.data);
 
             if (!response.ok) throw new Error(data.error || "Failed to create task");
 
@@ -131,7 +154,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
             setCategory("");
             setPriority("high");
             setDueDate("");
-            setFiles([]);
+            setFile(null);
             setIsOpen(false); // Close popup after successful creation
 
         } catch (error) {

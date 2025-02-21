@@ -18,7 +18,8 @@ export default function AuthForm() {
         designation: "",
         employeeCode: "",
         activeStatus: "",
-        vendorId: "" // ✅ Required for employees
+        vendorId: "", // ✅ Required for employees
+        role: ""
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -76,7 +77,9 @@ export default function AuthForm() {
                     department: data.admin.department,
                     designation: data.admin.designation,
                     employeeCode: data.admin.employeeCode,
-                    activeStatus: data.admin.activeStatus
+                    activeStatus: data.admin.activeStatus,
+                    activeStatus: data.admin.activeStatus,
+                    role: data.admin.role
                 }
                 : {
                     vendorId: data.user.vendorId,
@@ -88,7 +91,8 @@ export default function AuthForm() {
                     department: data.user.department,
                     designation: data.user.designation,
                     employeeCode: data.user.employeeCode,
-                    activeStatus: data.user.activeStatus
+                    activeStatus: data.user.activeStatus,
+                    role: data.user.role
                 };
 
             // ✅ Store user details in localStorage
@@ -101,6 +105,7 @@ export default function AuthForm() {
             localStorage.setItem("designation", userData.designation);
             localStorage.setItem("employeeCode", userData.employeeCode);
             localStorage.setItem("activeStatus", userData.activeStatus);
+            localStorage.setItem("role", userData.role)
 
             // ✅ Update global state using AuthContext
             login(userData);

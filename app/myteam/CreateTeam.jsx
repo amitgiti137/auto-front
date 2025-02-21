@@ -16,7 +16,8 @@ export default function CreateTeamForm({ closeModal }) {
         designation: "",
         employeeCode: "",
         activeStatus: "",
-        vendorId: "" // ✅ Will be set from localStorage
+        vendorId: "", // ✅ Will be set from localStorage
+        role: ""
     });
 
     const [showPassword, setShowPassword] = useState(false);
@@ -29,8 +30,9 @@ export default function CreateTeamForm({ closeModal }) {
     useEffect(() => {
         if (typeof window !== "undefined") {
             const storedVendorId = localStorage.getItem("vendorId");
-            if (storedVendorId) {
-                setFormData(prev => ({ ...prev, vendorId: storedVendorId }));
+            const storedrole = localStorage.getItem("role");
+            if (storedVendorId, storedrole) {
+                setFormData(prev => ({ ...prev, vendorId: storedVendorId, role: storedrole }));
             }
         }
     }, []);
@@ -94,7 +96,7 @@ export default function CreateTeamForm({ closeModal }) {
         } catch (error) {
             setError(error.message);
         }
-    };
+    }; 
 
     return (
         <div className="min-h-screen pt-1 flex items-center justify-center bg-gray-100">
