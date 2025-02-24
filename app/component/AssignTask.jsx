@@ -137,13 +137,15 @@ export default function AssignTask({ isOpen, setIsOpen }) {
         }   
 
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/taskall/`, formData, {
+            const response = await fetch(`https://automate-business-backend.vercel.app/api/taskall/`, {
+                method: "POST",
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
-                withCredentials: true,
+                body: formData,
             });
 
+            const data = await response.json(); // ✅ First parse JSON response
             console.log("API Response:", response.data);
 
             if (!response.ok) throw new Error(data.error || "Failed to create task");
