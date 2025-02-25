@@ -24,7 +24,7 @@ export default function LeftSidebar() {
       </button>
 
       {/* Sidebar Container */}
-      <aside className={`fixed top-0 left-0 h-full bg-green-500 transition-transform transform 
+      <aside className={`fixed top-0 left-0 h-full bg-[#ad9e9e] transition-transform transform 
         ${isOpen ? "translate-x-0" : "-translate-x-full"} 
         lg:translate-x-0 lg:w-[5%] w-[25%] md:w-[8%] shadow-lg z-40 p-0`}>
         
@@ -62,7 +62,7 @@ const NavItem = ({ href, icon, text, pathname, isTaskSection, closeSidebar }) =>
   return (
     <Link href={href} passHref>
       <div className={`flex flex-col items-center space-y-1 px-3 py-3 hover:bg-gray-300 transition rounded-md text-[12px] cursor-pointer
-        ${isActive ? "bg-white text-green-500 font-bold" : ""}`}
+        ${isActive ? "bg-white text-[#C8AAAA] font-bold" : ""}`}
         onClick={closeSidebar} // Close sidebar on click
         >
         <span className="text-lg">{icon}</span> {/* Icon */}

@@ -22,7 +22,7 @@ export default function RightSidebar() {
       </button>
 
       {/* Right Sidebar Container */}
-      <aside className={`fixed top-0 lg:left-[5%] left-0 h-full bg-gray-100 transition-transform transform ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:w-[11%] w-[75%] shadow-lg z-40 p-1`}>
+      <aside className={`fixed top-0 lg:left-[5%] left-0 h-full bg-[#C8AAAA] transition-transform transform ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:w-[11%] w-[75%] shadow-lg z-40 p-1`}>
         {/* <h2 className="text-md font-bold text-gray-900 mb-4">Task Management</h2> */}
         
         <nav className="text-gray-700">
@@ -55,7 +55,7 @@ const TaskItem = ({ href, text, icon, closeSidebar, onClick }) => {
   return href ? (
     <Link href={href} passHref>
       <div 
-        className={`flex items-center space-x-3 px-2 py-3 hover:bg-gray-300 transition rounded-lg text-[12px] ${isActive ? "bg-green-500 text-white font-bold w-[90%]" : "w-[95%]"}`}
+        className={`flex items-center space-x-3 px-2 py-3 hover:bg-gray-300 transition rounded-lg text-[12px] ${isActive ? "bg-[#aedaa9] font-bold w-[90%]" : "w-[95%]"}`}
         onClick={closeSidebar} // Close sidebar on click
       >
         <span>{icon}</span>

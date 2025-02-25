@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { FaTrash } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"; 
 
-const API_BASE_URL = "https://automate-business-backend.vercel.app"; // API URL
+const API_BASE_URL = "https://automate-ptg5.onrender.com"; // API URL
 
 export default function AssignTask({ isOpen, setIsOpen }) {
     const { user } = useAuth(); // Get logged-in user
@@ -137,7 +137,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
         }   
 
         try {
-            const response = await fetch(`https://automate-business-backend.vercel.app/api/taskall/`, {
+            const response = await fetch(`https://automate-ptg5.onrender.com/api/taskall/`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
