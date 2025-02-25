@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from "react";
 
 const MyTask = () => {
+    const [vendorId, setVendorId] = useState(null);
+    const [employeeId, setEmployeeId] = useState(null);
+    const [role, setRole] = useState(null);
     // State for selected period and status
     const [selectedPeriod, setSelectedPeriod] = useState("Today");
     const [selectedStatus, setSelectedStatus] = useState("Pending");
@@ -27,10 +30,17 @@ const MyTask = () => {
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [hoveredTask, setHoveredTask] = useState(null);
 
-    // Get vendorId and employeeId from localStorage
-    const vendorId = localStorage.getItem("vendorId");
-    const employeeId = localStorage.getItem("employeeId");
-    const role = localStorage.getItem("role");
+
+    
+
+    // ✅ Read `localStorage` inside `useEffect` to avoid SSR issues
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setVendorId(localStorage.getItem("vendorId"));
+            setEmployeeId(localStorage.getItem("employeeId"));
+            setRole(localStorage.getItem("role"));
+        }
+    }, []);
 
     // List of periods
     const periods = ["Today", "Yesterday", "This Week", "This Month", "Last Month", "Next Week", "Next Month", "All Time", "Custom"];
@@ -70,7 +80,7 @@ const MyTask = () => {
         if (selectedPeriod) {
             fetchTasks();
         }
-    }, [selectedPeriod]); // Fetch tasks when period changes
+    }, [vendorId, employeeId, selectedPeriod]); // Fetch tasks when period changes
 
     // ✅ Fetch Tasks from API
     const fetchTasks = async () => {
