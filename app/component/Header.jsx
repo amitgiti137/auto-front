@@ -19,10 +19,10 @@ export default function Header() {
     };
 
     return (
-        <div className="inset-0 w-full bg-[#c2b5b5] dark:bg-gray-900 px-6 py-3 shadow-md flex justify-between items-center">
+        <div className="inset-0 w-full bg-gradient-to-r from-[#C8AAAA] to-[#c2b5b5] dark:bg-gray-900 px-4 lg:px-6 pt-3 pb-1 lg:pb-3 shadow-md flex justify-between items-center">
             {/* Left: Logo */}
             <div className="flex items-center mx-auto lg:ps-[110px]">
-                <img src="/img/logo.jpg" alt="Logo" className="h-12" />
+                <img src="/img/logo.jpg" alt="Logo" className="h-12 lg:mt-0 mt-5" />
                 <div>
                 <h1 className="text-xl font-semibold text-gray-800 dark:text-white ml-3">I <span className="text-blue-500">A</span><span className="text-green-500">M</span> IT Planet</h1>
                 <p className="text-[12px] px-3">Integrated <span className="text-blue-500">Auto</span><span className="text-green-500">mate</span> Information Transfer</p>

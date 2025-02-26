@@ -202,6 +202,36 @@ const MyTask = () => {
         }
     };
 
+    // ✅ Handle Task Deletion
+    const handleDeleteTask = async (taskId) => {
+        if (role !== "Admin") {
+            alert("Only Admins can delete tasks.");
+            return;
+        }
+
+        if (!window.confirm("Are you sure you want to delete this task?")) return;
+
+        try {
+            const response = await fetch(
+                `https://automate-ptg5.onrender.com/api/trash/delete-task/${vendorId}/${taskId}/${role}`,
+                {
+                    method: "DELETE",
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to delete task.");
+            }
+
+            alert(data.message || "Task deleted successfully!");
+            fetchTasks(); // Refresh tasks after deletion
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
     return (
         <>
             {/* Period Buttons */}
@@ -264,13 +294,25 @@ const MyTask = () => {
                                         {/* Task Title */}
                                         <span>{task.title} - <span className="text-sm text-gray-500">{task.dueDate}</span></span>
 
-                                        {/* Edit Button */}
-                                        <button
-                                            className="bg-yellow-500 text-white px-3 py-1 rounded text-sm"
-                                            onClick={() => handleEditClick(task)}
-                                        >
-                                            Edit
-                                        </button>
+                                        {/* Buttons */}
+                                        <div className="flex gap-2">
+                                            <button
+                                                className="bg-yellow-500 text-white px-3 py-1 rounded text-sm"
+                                                onClick={() => handleEditClick(task)}
+                                            >
+                                                ✏ Edit
+                                            </button>
+
+                                            {/* 🗑 Delete Button */}
+                                            {role === "Admin" && (
+                                                <button
+                                                    className="bg-red-500 text-white px-3 py-1 rounded text-sm"
+                                                    onClick={() => handleDeleteTask(task.taskId)}
+                                                >
+                                                    🗑 Delete
+                                                </button>
+                                            )}
+                                        </div>
 
                                         {/* Hover Pop-up */}
                                         {hoveredTask && hoveredTask.taskId === task.taskId && (
