@@ -31,7 +31,7 @@ const MyTask = () => {
     const [hoveredTask, setHoveredTask] = useState(null);
 
 
-    
+
 
     // ✅ Read `localStorage` inside `useEffect` to avoid SSR issues
     useEffect(() => {
@@ -113,21 +113,21 @@ const MyTask = () => {
 
         let formattedDate = "";
 
-    if (task.dueDate) {
-        try {
-            // ✅ Convert "21/02/2025, 22:14" -> "2025-02-21"
-            const [datePart] = task.dueDate.split(","); // Remove time part
-            const [day, month, year] = datePart.trim().split("/"); // Split DD/MM/YYYY
-            formattedDate = `${year}-${month}-${day}`; // Convert to YYYY-MM-DD format
-        } catch (error) {
-            console.error("Error parsing dueDate:", error);
+        if (task.dueDate) {
+            try {
+                // ✅ Convert "21/02/2025, 22:14" -> "2025-02-21"
+                const [datePart] = task.dueDate.split(","); // Remove time part
+                const [day, month, year] = datePart.trim().split("/"); // Split DD/MM/YYYY
+                formattedDate = `${year}-${month}-${day}`; // Convert to YYYY-MM-DD format
+            } catch (error) {
+                console.error("Error parsing dueDate:", error);
+            }
         }
-    }
 
-    // ✅ Extract assigned user IDs
-    const assignedUserIds = Array.isArray(task.assignedTo)
-    ? task.assignedTo.map(emp => emp.employeeId)
-    : [];
+        // ✅ Extract assigned user IDs
+        const assignedUserIds = Array.isArray(task.assignedTo)
+            ? task.assignedTo.map(emp => emp.employeeId)
+            : [];
 
         setSelectedTask(task);
         setFormData({
@@ -160,22 +160,22 @@ const MyTask = () => {
         try {
 
             // ✅ Ensure `assignedTo` is always an array and remove null values
-        const updatedAssignedTo = selectedUsers.filter(userId => userId !== null && userId !== undefined);
+            const updatedAssignedTo = selectedUsers.filter(userId => userId !== null && userId !== undefined);
 
-        // ✅ Prepare the payload dynamically
-        const updatePayload = {
-            role,
-            title: formData.title,
-            description: formData.description,
-            priority: formData.priority,
-            status: formData.status,
-            assignedTo: updatedAssignedTo.length > 0 ? updatedAssignedTo : "",
-        };
+            // ✅ Prepare the payload dynamically
+            const updatePayload = {
+                role,
+                title: formData.title,
+                description: formData.description,
+                priority: formData.priority,
+                status: formData.status,
+                assignedTo: updatedAssignedTo.length > 0 ? updatedAssignedTo : "",
+            };
 
-        // ✅ Only include dueDate if the role is "Admin"
-        if (role === "Admin") {
-            updatePayload.dueDate = formData.dueDate;
-        }
+            // ✅ Only include dueDate if the role is "Admin"
+            if (role === "Admin") {
+                updatePayload.dueDate = formData.dueDate;
+            }
 
             const response = await fetch(
                 `https://automate-ptg5.onrender.com/api/taskall/reassign/${vendorId}/${selectedTask.taskId}`,
@@ -286,10 +286,10 @@ const MyTask = () => {
                         {filteredTasks.length > 0 ? (
                             <ul className="list-disc list-inside text-left mx-auto w-[80%]">
                                 {filteredTasks.map((task, index) => (
-                                    <li key={index} 
-                                    className="flex justify-between items-center text-gray-700 py-2 border-b relative"
-                                    onMouseEnter={() => setHoveredTask(task)} // ✅ Show pop-up on hover
-                                    onMouseLeave={() => setHoveredTask(null)} // ✅ Hide pop-up on leave
+                                    <li key={index}
+                                        className="flex justify-between items-center text-gray-700 py-2 border-b relative"
+                                        onMouseEnter={() => setHoveredTask(task)} // ✅ Show pop-up on hover
+                                        onMouseLeave={() => setHoveredTask(null)} // ✅ Hide pop-up on leave
                                     >
                                         {/* Task Title */}
                                         <span>{task.title} - <span className="text-sm text-gray-500">{task.dueDate}</span></span>
@@ -312,6 +312,10 @@ const MyTask = () => {
                                                     🗑 Delete
                                                 </button>
                                             )}
+                                            {/* ➡ Chat Button */}
+                                            <a href={`/chat?taskId=${task.taskId}`} className="bg-blue-500 text-white px-3 py-1 rounded text-sm">
+                                                💬 Chat
+                                            </a>
                                         </div>
 
                                         {/* Hover Pop-up */}
