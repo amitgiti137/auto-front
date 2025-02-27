@@ -5,6 +5,8 @@ const TaskChat = () => {
     const searchParams = useSearchParams();  // ✅ Get query parameters
     const taskId = searchParams.get("taskId");  // ✅ Extract taskId from URL
 
+    const [vendorId, setVendorId] = useState(null);
+    const [taskDetails, setTaskDetails] = useState(null);
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
     const [employeeId, setEmployeeId] = useState(null);
@@ -14,6 +16,7 @@ const TaskChat = () => {
         if (typeof window !== "undefined") {
             setEmployeeId(localStorage.getItem("employeeId"));
             setEmployeeName(localStorage.getItem("employeeName"));
+            setVendorId(localStorage.getItem("vendorId"));
         }
     }, []);
 
@@ -22,6 +25,27 @@ const TaskChat = () => {
             fetchMessages();
         }
     }, [taskId]);
+
+
+    useEffect(() => {
+        if (vendorId) {
+            fetchTaskDetails();
+        }
+    }, [vendorId]);
+
+    // ✅ Fetch Task Details
+    const fetchTaskDetails = async () => {
+        try {
+            const res = await fetch(`https://automate-ptg5.onrender.com/api/taskall/task/${vendorId}/${taskId}`);
+            const data = await res.json();
+            if (res.ok) {
+                setTaskDetails(data.task || null);
+            }
+        } catch (err) {
+            console.error("Error fetching task details:", err);
+        }
+    };
+
 
     const fetchMessages = async () => {
         try {
@@ -61,38 +85,82 @@ const TaskChat = () => {
     };
 
     return (
-        <div className="flex items-end flex-col h-[550px] p-5">
-            {/* Task Details */}
-            <div className="mb-5 w-[100%] lg:w-[25%] p-4 bg-white rounded shadow">
-                <h2 className="text-lg font-bold">Task Chat (Task ID: {taskId || "N/A"})</h2>
-            </div>
+        <div className="ms-[70px] mt-5 flex flex-wrap justify-between">
+            {/* Left Side - Task Details */}
+            <div className="w-full px-[100px] lg:w-[68%] p-4 bg-white rounded shadow">
+                <h2 className="text-xl font-bold mb-3">Task Details</h2>
+                {taskDetails ? (
+                    <div>
+                        <p><strong>Title:</strong> {taskDetails.title}</p>
+                        <p><strong>Description:</strong> {taskDetails.description}</p>
+                        <p><strong>Category:</strong> {taskDetails.category}</p>
+                        <p><strong>Priority:</strong> {taskDetails.priority}</p>
+                        <p><strong>Due Date:</strong> {taskDetails.dueDate}</p>
+                        <p><strong>Status:</strong> {taskDetails.status}</p>
+                        <p><strong>Assigned By:</strong> {taskDetails.assignedByName}</p>
+                        <p><strong>Assigned To:</strong> {taskDetails.assignedToNames.join(", ")}</p>
 
-            {/* Chat Messages */}
-            <div className="flex-1 w-[100%] lg:w-[25%] overflow-y-auto bg-white p-4 rounded shadow">
-                {messages.length > 0 ? (
-                    messages.map((msg, index) => (
-                        <div key={index} className={`mb-2 p-2 rounded ${msg.senderId == employeeId ? "bg-blue-100 text-right" : "bg-gray-200"}`}>
-                            <p className="text-sm font-semibold">{msg.senderName}</p>
-                            <p className="text-sm">{msg.message}</p>
-                        </div>
-                    ))
+                        {/* Display Attachment if Available */}
+                        {taskDetails.attachment && (
+                            <div className="mt-3">
+                                <p><strong>Attachment:</strong></p>
+                                <a
+                                    href={taskDetails.attachment}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-500 underline"
+                                >
+                                    View File
+                                </a>
+                            </div>
+                        )}
+                    </div>
                 ) : (
-                    <p className="text-gray-500">No messages yet.</p>
+                    <p className="text-gray-500">Loading task details...</p>
                 )}
             </div>
 
-            {/* Chat Input */}
-            <div className="mt-4 w-[100%] lg:w-[25%] flex gap-2">
-                <input
-                    type="text"
-                    className="flex-1 p-2 border rounded"
-                    placeholder="Type a message..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                />
-                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={sendMessage}>
-                    Send
-                </button>
+            <div className="flex flex-col w-full lg:w-[30%] h-[550px]">
+                {/* Task Details */}
+                <div className="mb-5 w-[100%] p-4 bg-white rounded shadow">
+                <div className="flex gap-5 items-center">
+                <h2 className="text-lg font-bold">Task Chat</h2>
+                <h4>{taskId || "N/A"}</h4>
+                <h4>({taskDetails.title})</h4>
+                </div>
+                </div>
+                {/* Chat Messages */}
+                <div className="flex-1 w-[100%] overflow-y-auto bg-white p-4 rounded shadow">
+                    {messages.length > 0 ? (
+                        messages.map((msg, index) => (
+                            <div key={index} className={`mb-2 p-2 rounded ${msg.senderId == employeeId ? "bg-blue-100 text-right" : "bg-gray-200"}`}>
+                                <p className="text-sm font-semibold">{msg.senderName}</p>
+                                <p className="text-sm">{msg.message}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-gray-500">No messages yet.</p>
+                    )}
+                </div>
+
+                {/* Chat Input */}
+                <div className=" mt-4 w-[100%] flex gap-2">
+                    <div className="w-[80%]">
+                    <input
+                        type="text"
+                        className="w-full p-2 border rounded"
+                        placeholder="Type a message..."
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                    />
+                    </div>
+                    <div className="w-[20%]">
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={sendMessage}>
+                        Send
+                    </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
