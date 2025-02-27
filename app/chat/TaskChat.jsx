@@ -126,7 +126,7 @@ const TaskChat = () => {
                 <div className="flex gap-5 items-center">
                 <h2 className="text-lg font-bold">Task Chat</h2>
                 <h4>{taskId || "N/A"}</h4>
-                <h4>({taskDetails.title})</h4>
+                <h4>({taskDetails?.title})</h4>
                 </div>
                 </div>
                 {/* Chat Messages */}
