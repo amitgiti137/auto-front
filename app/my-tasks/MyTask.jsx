@@ -15,6 +15,7 @@ const MyTask = () => {
     const [employees, setEmployees] = useState([]); // ✅ Store employee list
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [showAssignedByMe, setShowAssignedByMe] = useState(false); 
 
     // Edit Modal State
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -29,6 +30,8 @@ const MyTask = () => {
 
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [hoveredTask, setHoveredTask] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [isUserListOpen, setIsUserListOpen] = useState(false);
 
 
 
@@ -80,7 +83,7 @@ const MyTask = () => {
         if (selectedPeriod) {
             fetchTasks();
         }
-    }, [vendorId, employeeId, selectedPeriod]); // Fetch tasks when period changes
+    }, [vendorId, employeeId, selectedPeriod, showAssignedByMe]); // Fetch tasks when period changes
 
     // ✅ Fetch Tasks from API
     const fetchTasks = async () => {
@@ -88,13 +91,12 @@ const MyTask = () => {
         setError(null);
 
         try {
-            const response = await fetch(
-                `https://automate-ptg5.onrender.com/api/taskall/assigned-to/${vendorId}/${employeeId}`
-            );
+            const url = showAssignedByMe
+                ? `https://automate-ptg5.onrender.com/api/taskall/assigned-by/${vendorId}/${employeeId}`
+                : `https://automate-ptg5.onrender.com/api/taskall/assigned-to/${vendorId}/${employeeId}`;
 
-            if (!response.ok) {
-                throw new Error("Failed to fetch tasks.");
-            }
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("Failed to fetch tasks.");
 
             const data = await response.json();
             setTasks(data.tasks || []); // Store fetched tasks in state
@@ -155,6 +157,10 @@ const MyTask = () => {
         );
     };
 
+    const handleFileChange = (event) => {
+        setSelectedFile([...event.target.files]);
+    };
+
     // ✅ Handle Task Update (Submit Form)
     const handleTaskUpdate = async () => {
         try {
@@ -162,29 +168,36 @@ const MyTask = () => {
             // ✅ Ensure `assignedTo` is always an array and remove null values
             const updatedAssignedTo = selectedUsers.filter(userId => userId !== null && userId !== undefined);
 
-            // ✅ Prepare the payload dynamically
-            const updatePayload = {
-                role,
-                title: formData.title,
-                description: formData.description,
-                priority: formData.priority,
-                status: formData.status,
-                assignedTo: updatedAssignedTo.length > 0 ? updatedAssignedTo : "",
-            };
+            // ✅ Convert updatePayload to FormData while keeping the same name
+            const updatePayload = new FormData();
+            updatePayload.append("role", role);
+            updatePayload.append("title", formData.title);
+            updatePayload.append("description", formData.description);
+            updatePayload.append("priority", formData.priority);
+            updatePayload.append("status", formData.status);
 
-            // ✅ Only include dueDate if the role is "Admin"
+            updatedAssignedTo.forEach(userId => {
+                updatePayload.append("assignedTo[]", userId); // Append array elements properly
+            });
+
             if (role === "Admin") {
-                updatePayload.dueDate = formData.dueDate;
+                updatePayload.append("dueDate", formData.dueDate);
             }
+
+            // ✅ Append all selected files
+            if (selectedFile && selectedFile.length > 0) {
+                selectedFile.forEach(file => {
+                    updatePayload.append("attachments", file); // Append multiple files
+                });
+            }
+
+
 
             const response = await fetch(
                 `https://automate-ptg5.onrender.com/api/taskall/reassign/${vendorId}/${selectedTask.taskId}`,
                 {
                     method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(updatePayload),
+                    body: updatePayload,
                 }
             );
 
@@ -269,6 +282,16 @@ const MyTask = () => {
                     </div>
                 </section>
             )}
+
+            {/* Toggle Button for Task View */}
+            <section className="text-center my-5">
+                <button
+                    className={`px-4 py-2 rounded-full text-white font-bold ${showAssignedByMe ? "bg-green-500" : "bg-blue-500"}`}
+                    onClick={() => setShowAssignedByMe(!showAssignedByMe)}
+                >
+                    {showAssignedByMe ? "Show Assigned To Me" : "Show Assigned By Me"}
+                </button>
+            </section>
 
             {/* Task List */}
             <section className="flex justify-center items-center">
@@ -391,20 +414,43 @@ const MyTask = () => {
                             <option>Completed</option>
                         </select>
 
-                        {/* Assigned Users Selection */}
-                        <div className="mt-3">
+                        {/* Assigned Users Selection - Dropdown Checkbox */}
+                        <div className="mt-3 relative">
                             <p className="font-semibold">Select Team</p>
-                            {employees.map((emp) => (
-                                <label key={emp.employeeId} className="flex items-center gap-2 p-2">
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedUsers.includes(emp.employeeId)}
-                                        onChange={() => handleUserSelection(emp.employeeId)}
-                                    />
-                                    {emp.firstName} {emp.lastName}
-                                </label>
-                            ))}
+
+                            {/* Dropdown Button */}
+                            <button
+                                onClick={() => setIsUserListOpen(!isUserListOpen)}
+                                className="w-full border p-2 rounded bg-gray-100 hover:bg-green-200 flex justify-between items-center"
+                            >
+                                {selectedUsers.length > 0
+                                    ? `${selectedUsers.length} User(s) Selected`
+                                    : "Select Team"}
+                                <span>{isUserListOpen ? "▲" : "▼"}</span>
+                            </button>
+
+                            {/* Dropdown Checkbox List */}
+                            {isUserListOpen && (
+                                <div className="absolute w-full bg-white border rounded shadow-lg mt-1 max-h-40 overflow-y-auto z-50">
+                                    {employees.map((emp) => (
+                                        <label
+                                            key={emp.employeeId}
+                                            className="flex items-center gap-2 p-2 hover:bg-green-200 cursor-pointer"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedUsers.includes(emp.employeeId)}
+                                                onChange={() => handleUserSelection(emp.employeeId)}
+                                            />
+                                            {emp.firstName} {emp.lastName}
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
                         </div>
+
+
+                        <input type="file" multiple className="w-full p-2 border rounded mt-2" onChange={handleFileChange} />
 
                         {/* Save Button */}
                         <button className="bg-green-500 text-white px-4 py-2 rounded mt-4" onClick={handleTaskUpdate}>

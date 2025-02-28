@@ -19,7 +19,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
     const [category, setCategory] = useState("");
     const [priority, setPriority] = useState("high");
     const [dueDate, setDueDate] = useState("");
-    const [file, setFile] = useState(null);
+    const [files, setFiles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [isUserListOpen, setIsUserListOpen] = useState(false);
@@ -59,20 +59,21 @@ export default function AssignTask({ isOpen, setIsOpen }) {
         }
     }, [vendorId]);
 
-    // ✅ Handle file selection (Single file only)
+    // ✅ Handle multiple file selection
     const handleFileChange = (event) => {
-        const selectedFile = event.target.files[0]; // ✅ Select first file
-        if (!selectedFile) return;
-        
-        const allowedTypes = ["image/jpeg", "image/png", "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
-        
-        // ✅ Check if the selected file type is valid
-    if (!allowedTypes.includes(selectedFile.type)) {
-        setError("Invalid file type. Allowed: JPG, PNG, PDF, DOC, DOCX.");
-        return;
-    }
+        const selectedFiles = Array.from(event.target.files); // Convert to array
+        if (!selectedFiles.length) return;
 
-        setFile(selectedFile);
+        const allowedTypes = ["image/jpeg", "image/png", "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+
+        // ✅ Validate file types
+        const validFiles = selectedFiles.filter(file => allowedTypes.includes(file.type));
+        if (validFiles.length !== selectedFiles.length) {
+            setError("Some files have invalid formats. Allowed: JPG, PNG, PDF, DOC, DOCX.");
+            return;
+        }
+
+        setFiles(validFiles);
         setError("");
     };
 
@@ -125,10 +126,10 @@ export default function AssignTask({ isOpen, setIsOpen }) {
             formData.append("assignedTo", userId);
         });
 
-        // ✅ Append file if available
-        if (file) {
-            formData.append("attachment", file);
-        }
+        // ✅ Append multiple files
+        files.forEach(file => {
+            formData.append("attachments", file);
+        });
 
         // ✅ Log formData for debugging
         console.log("FormData before sending:");
@@ -156,7 +157,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
             setCategory("");
             setPriority("high");
             setDueDate("");
-            setFile(null);
+            setFiles([]);
             setIsOpen(false); // Close popup after successful creation
 
         } catch (error) {
@@ -285,6 +286,9 @@ export default function AssignTask({ isOpen, setIsOpen }) {
 
                 {/* File Upload */}
                 <input type="file" multiple className="w-full border p-2 rounded mb-3" onChange={handleFileChange} />
+                {files.length > 0 && (
+                    <p className="text-sm text-green-600 mb-2">{files.length} file(s) selected</p>
+                )}
 
                 <div className="flex justify-end gap-2">
                     <button className="px-4 py-2 bg-gray-300 rounded" onClick={() => setIsOpen(false)}>Cancel</button>

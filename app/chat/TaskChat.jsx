@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";  // ✅ Import useSearchParams
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 const TaskChat = () => {
     const searchParams = useSearchParams();  // ✅ Get query parameters
@@ -103,34 +104,42 @@ const TaskChat = () => {
                         <p><strong>Assigned By:</strong> {taskDetails.assignedByName}</p>
                         <p><strong>Assigned To:</strong> {taskDetails.assignedToNames.join(", ")}</p>
 
-                        {/* Display Attachment if Available */}
-                        {taskDetails.attachment && (
+                        {/* Display Attachments if Available */}
+                        {taskDetails.attachments && taskDetails.attachments.length > 0 ? (
                             <div className="mt-3">
-                                <p><strong>Attachment:</strong></p>
-                                <a
-                                    href={taskDetails.attachment}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-500 underline"
-                                >
-                                    {taskDetails.attachment ? (
-                                        <Image
-                                            src={taskDetails.attachment}
-                                            alt="Task Attachment"
-                                            className=""
-                                            width={600}
-                                            height={400}
-                                            style={{ width: "20%", height: "auto" }}
-                                            priority={true}
-                                            onError={(e) => e.target.style.display = 'none'} // Hide image if it fails to load
-                                        />
-                                    ) : (
-                                        <p className="text-gray-500 text-center mt-4">File not available</p>
-                                    )}
-
-                                </a>
+                                <p><strong>Attachments:</strong></p>
+                                <div className="flex flex-wrap gap-3">
+                                    {taskDetails.attachments.map((attachment, index) => (
+                                        <div key={index} className="border p-1 rounded shadow">
+                                            <Link href={attachment.replace(/ /g, "%20")} target="_blank" rel="noopener noreferrer">
+                                                {/\.(jpeg|jpg|png)$/i.test(attachment) ? ( // ✅ Check if it's an image
+                                                    <Image
+                                                        src={attachment.replace(/ /g, "%20")} // ✅ Encode spaces
+                                                        alt={`Task Attachment ${index + 1}`}
+                                                        width={80}
+                                                        height={80}
+                                                        style={{ width: "100%", height: "auto" }}
+                                                        className="object-cover cursor-pointer" // ✅ Add pointer cursor
+                                                        priority={true}
+                                                        onError={(e) => {
+                                                            e.target.onerror = null;
+                                                            e.target.style.display = "none";
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <span className="text-blue-500 underline">
+                                                        {attachment.split("/").pop()} {/* Show file name */}
+                                                    </span>
+                                                )}
+                                            </Link>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
+                        ) : (
+                            <p className="text-gray-500 text-center mt-4">No attachments available</p>
                         )}
+
                     </div>
                 ) : (
                     <p className="text-gray-500">Loading task details...</p>
