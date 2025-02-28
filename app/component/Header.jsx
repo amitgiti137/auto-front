@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRef } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FiBell, FiLogOut, FiSettings, FiUser, FiMoon, FiSun } from "react-icons/fi";
 import { FaAndroid, FaApple } from "react-icons/fa";
@@ -10,7 +12,23 @@ export default function Header() {
     const { user, logout } = useAuth(); // ✅ Get user and logout function
     const [showDropdown, setShowDropdown] = useState(false);
     const [darkMode, setDarkMode] = useState(false);
+    const dropdownRef = useRef(null);
     const router = useRouter();
+
+
+    // ✅ Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     // ✅ Toggle dark mode
     const toggleDarkMode = () => {
@@ -36,10 +54,10 @@ export default function Header() {
 
                 {/* ✅ If User is Logged In */}
                 {user ? (
-                    <div className="relative">
+                    <div className="relative" ref={dropdownRef}>
                         <button
                             className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-full"
-                            onClick={() => setShowDropdown(!showDropdown)}
+                            onClick={() => setShowDropdown((prev) => !prev)}
                         >
                             <span className="font-bold">
                                 {user?.firstName?.charAt(0) || "U"}
@@ -98,7 +116,10 @@ export default function Header() {
                                     {/* Logout Button */}
                                     <button
                                         className="flex items-center space-x-3 w-full py-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-700 px-3 rounded mt-2"
-                                        onClick={logout}
+                                        onClick={() => {
+                                            logout();
+                                            router.push("/");
+                                        }}
                                     >
                                         <FiLogOut /> <span>Log out</span>
                                     </button>
