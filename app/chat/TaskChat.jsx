@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";  // ✅ Import useSearchParams
 import { useState, useEffect } from "react";
 
@@ -30,6 +31,7 @@ const TaskChat = () => {
     useEffect(() => {
         if (vendorId) {
             fetchTaskDetails();
+            sendMessage();
         }
     }, [vendorId]);
 
@@ -67,6 +69,7 @@ const TaskChat = () => {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    vendorId: vendorId,
                     taskId: taskId,  // Corrected taskId
                     senderId: employeeId,  // Taken from localStorage
                     message: message // User-input message
@@ -85,9 +88,9 @@ const TaskChat = () => {
     };
 
     return (
-        <div className="ms-[70px] mt-5 flex flex-wrap justify-between">
+        <div className="lg:ms-[70px] mt-5 flex flex-wrap justify-between">
             {/* Left Side - Task Details */}
-            <div className="w-full px-[100px] lg:w-[68%] p-4 bg-white rounded shadow">
+            <div className="lg:px-[100px] w-[100%] lg:w-[68%] p-4 bg-white rounded shadow">
                 <h2 className="text-xl font-bold mb-3">Task Details</h2>
                 {taskDetails ? (
                     <div>
@@ -110,7 +113,21 @@ const TaskChat = () => {
                                     rel="noopener noreferrer"
                                     className="text-blue-500 underline"
                                 >
-                                    View File
+                                    {taskDetails.attachment ? (
+                                        <Image
+                                            src={taskDetails.attachment}
+                                            alt="Task Attachment"
+                                            className=""
+                                            width={600}
+                                            height={400}
+                                            style={{ width: "20%", height: "auto" }}
+                                            priority={true}
+                                            onError={(e) => e.target.style.display = 'none'} // Hide image if it fails to load
+                                        />
+                                    ) : (
+                                        <p className="text-gray-500 text-center mt-4">File not available</p>
+                                    )}
+
                                 </a>
                             </div>
                         )}
@@ -120,14 +137,14 @@ const TaskChat = () => {
                 )}
             </div>
 
-            <div className="flex flex-col w-full lg:w-[30%] h-[550px]">
+            <div className="flex flex-col w-[100%] lg:w-[30%] h-[550px]">
                 {/* Task Details */}
                 <div className="mb-5 w-[100%] p-4 bg-white rounded shadow">
-                <div className="flex gap-5 items-center">
-                <h2 className="text-lg font-bold">Task Chat</h2>
-                <h4>{taskId || "N/A"}</h4>
-                <h4>({taskDetails?.title})</h4>
-                </div>
+                    <div className="flex gap-5 items-center">
+                        <h2 className="text-lg font-bold">Task Chat</h2>
+                        <h4>{taskId || "N/A"}</h4>
+                        <h4>({taskDetails?.title})</h4>
+                    </div>
                 </div>
                 {/* Chat Messages */}
                 <div className="flex-1 w-[100%] overflow-y-auto bg-white p-4 rounded shadow">
@@ -146,19 +163,19 @@ const TaskChat = () => {
                 {/* Chat Input */}
                 <div className=" mt-4 w-[100%] flex gap-2">
                     <div className="w-[80%]">
-                    <input
-                        type="text"
-                        className="w-full p-2 border rounded"
-                        placeholder="Type a message..."
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                    />
+                        <input
+                            type="text"
+                            className="w-full p-2 border rounded"
+                            placeholder="Type a message..."
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                        />
                     </div>
                     <div className="w-[20%]">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={sendMessage}>
-                        Send
-                    </button>
+                        <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={sendMessage}>
+                            Send
+                        </button>
                     </div>
                 </div>
             </div>
