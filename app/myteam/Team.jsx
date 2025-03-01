@@ -91,7 +91,7 @@ export default function EmployeeList() {
 
 
     return (
-        <div className="container mx-auto px-20 mt-10">
+        <div className="container mx-auto px-20 mt-28">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Employee List</h2>
                 {/* ✅ Add Member Button to open Modal */}

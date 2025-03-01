@@ -57,7 +57,7 @@ const TaskTemplates = () => {
     );
 
     return (
-        <section className="flex justify-center my-10">
+        <section className="flex justify-center mt-28">
             <div className="w-[100%] lg:w-[60%] flex flex-col items-center text-center">
                 <h2 className="text-lg font-bold mb-4">Task Templates</h2>
 

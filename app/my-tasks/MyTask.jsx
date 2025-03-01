@@ -248,7 +248,7 @@ const MyTask = () => {
     return (
         <>
             {/* Period Buttons */}
-            <section className="my-10">
+            <section className="mt-28">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-wrap justify-center gap-2">
                         {periods.map((period, index) => (

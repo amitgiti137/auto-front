@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { FiBell, FiLogOut, FiSettings, FiUser, FiMoon, FiSun } from "react-icons/fi";
 import { FaAndroid, FaApple } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext"; // ✅ Import Auth Context
+import Link from "next/link";
 
 export default function Header() {
     const { user, logout } = useAuth(); // ✅ Get user and logout function
@@ -37,7 +38,7 @@ export default function Header() {
     };
 
     return (
-        <div className="inset-0 w-full bg-gradient-to-r from-[#C8AAAA] to-[#c2b5b5] dark:bg-gray-900 px-4 lg:px-6 pt-3 pb-1 lg:pb-3 shadow-md flex justify-between items-center">
+        <div className="fixed top-0 left-0 w-full bg-gradient-to-r from-[#C8AAAA] to-[#c2b5b5] dark:bg-gray-900 px-4 lg:px-6 pt-3 pb-1 lg:pb-3 shadow-md flex justify-between items-center z-10">
             {/* Left: Logo */}
             <div className="flex items-center mx-auto lg:ps-[110px]">
                 <img src="/img/logo.jpg" alt="Logo" className="h-12 lg:mt-0 mt-5" />
@@ -84,13 +85,18 @@ export default function Header() {
 
                                 {/* Menu Items */}
                                 <div className="mt-3">
-                                    <button className="flex items-center space-x-3 w-full py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 px-3 rounded">
+                                    <Link href="/profile">
+                                    <button className="flex items-center space-x-3 w-full py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 px-3 rounded"
+                                    onClick={() => setShowDropdown(false)}>
                                         <FiUser /> <span>My Profile</span>
                                     </button>
-                                    <button className="flex items-center space-x-3 w-full py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 px-3 rounded">
+                                    </Link>
+                                    <button className="flex items-center space-x-3 w-full py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 px-3 rounded"
+                                    onClick={() => setShowDropdown(false)}>
                                         <FiSettings /> <span>Settings</span>
                                     </button>
-                                    <button className="flex items-center space-x-3 w-full py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 px-3 rounded">
+                                    <button className="flex items-center space-x-3 w-full py-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 px-3 rounded"
+                                    onClick={() => setShowDropdown(false)}>
                                         ₹ <span>Billing</span>
                                     </button>
 

@@ -89,7 +89,7 @@ const TaskChat = () => {
     };
 
     return (
-        <div className="lg:ms-[70px] mt-5 flex flex-wrap justify-between">
+        <div className="lg:ms-[70px] mt-20 flex flex-wrap justify-between">
             {/* Left Side - Task Details */}
             <div className="lg:px-[100px] w-[100%] lg:w-[68%] p-4 bg-white rounded shadow">
                 <h2 className="text-xl font-bold mb-3">Task Details</h2>
