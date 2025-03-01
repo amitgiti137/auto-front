@@ -70,9 +70,9 @@ const TaskAll = () => {
     };
 
     return (
-        <>
+        <div className='bg-[#F0F0D7] h-screen'>
             {/* Period Buttons */}
-            <section className="mt-28">
+            <section className="pt-28">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-wrap justify-center gap-2">
                         {periods.map((period, index) => (
@@ -129,7 +129,7 @@ const TaskAll = () => {
                     </div>
                 </div>
             </section>
-        </>
+        </div>
     );
 };
 

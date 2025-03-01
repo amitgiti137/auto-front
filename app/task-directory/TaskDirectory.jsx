@@ -74,8 +74,8 @@ const TaskDirectory = () => {
     );
 
     return (
-        <section className="flex justify-center my-10">
-            <div className="my-10 w-[100%] lg:w-[65%] px-4">
+        <section className="bg-[#F0F0D7] h-full flex justify-center py-10">
+            <div className="py-10 w-[100%] lg:w-[65%] px-4">
                 <h2 className="text-lg font-bold text-center mb-2">Tasks Directory</h2>
                 <p className="text-center text-sm text-gray-600 mb-4">
                     List of Department-wise Tasks curated by Automate Business

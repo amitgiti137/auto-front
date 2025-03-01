@@ -87,9 +87,9 @@ const TaskDashboard = () => {
     };
 
     return (
-        <>
+        <div className="bg-[#F0F0D7] h-screen">
             {/* Period Selection Buttons */}
-            <section className="my-10">
+            <section className="pt-28">
                 <div className="container mx-auto px-4 text-center">
                     <div className="flex flex-wrap justify-center gap-2">
                     {["Today", "Yesterday", "This Week", "This Month", "Last Month", "Next Week", "Next Month", "All Time", "Custom"].map((period, index) => (
@@ -150,7 +150,7 @@ const TaskDashboard = () => {
                                 <th className="px-4 py-2 border">Completed</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="bg-[#F5EFFF]">
                             {Object.keys(groupedTasks).length > 0 ? (
                                 Object.entries(groupedTasks).map(([name, stats]) => (
                                     <tr key={name} className="text-center border-t">
@@ -173,7 +173,7 @@ const TaskDashboard = () => {
                     </table>
                 </div>
             </section>
-        </>
+        </div>
     );
 };
 

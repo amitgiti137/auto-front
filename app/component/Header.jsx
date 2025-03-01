@@ -57,7 +57,7 @@ export default function Header() {
                 {user ? (
                     <div className="relative" ref={dropdownRef}>
                         <button
-                            className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-full"
+                            className="flex items-center space-x-2 bg-[#A9B5DF] text-white px-4 py-2 rounded-full"
                             onClick={() => setShowDropdown((prev) => !prev)}
                         >
                             <span className="font-bold">
@@ -68,7 +68,7 @@ export default function Header() {
 
                         {/* Dropdown Menu */}
                         {showDropdown && (
-                            <div className="absolute right-0 mt-3 w-64 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 z-50">
+                            <div className="absolute right-0 mt-3 w-64 bg-[#FBF6E9] dark:bg-gray-800 shadow-lg rounded-lg p-4 z-50">
                                 {/* User Info */}
                                 <div className="flex items-center space-x-3 border-b pb-3">
                                     <div className="bg-blue-500 text-white w-10 h-10 flex items-center justify-center rounded-full">

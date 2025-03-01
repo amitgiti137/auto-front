@@ -262,7 +262,7 @@ export default function CreateTeamForm({ closeModal }) {
                     </div>
 
                     {/* Submit Button */}
-                    <button type="submit" className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition">
+                    <button type="submit" className="w-full bg-[#71BBB2] text-white py-2 rounded-md hover:bg-[#EFE9D5] hover:text-[#71BBB2] transition">
                         Register Employee
                     </button>
                 </form>

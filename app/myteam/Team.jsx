@@ -109,12 +109,13 @@ export default function EmployeeList() {
 
 
     return (
-        <div className="container mx-auto px-20 mt-28">
+        <section className="bg-[#F0F0D7] ">
+            <div className="h-screen container mx-auto px-20 pt-28">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Employee List</h2>
                 {/* ✅ Add Member Button to open Modal */}
                 <button
-                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition"
+                    className="bg-[#A9B5DF] text-white px-4 py-2 rounded-md hover:bg-[#EFE9D5] hover:text-[#A9B5DF] transition"
                     onClick={() => setIsModalOpen(true)}
                 >
                     Add Member
@@ -238,5 +239,6 @@ export default function EmployeeList() {
                 </div>
             )}
         </div>
+        </section>
     );
 }

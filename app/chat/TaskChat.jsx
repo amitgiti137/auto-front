@@ -89,9 +89,9 @@ const TaskChat = () => {
     };
 
     return (
-        <div className="lg:ms-[70px] mt-20 flex flex-wrap justify-between">
+        <div className="bg-[#F0F0D7] lg:ms-[70px] pt-20 flex flex-wrap justify-between">
             {/* Left Side - Task Details */}
-            <div className="lg:px-[100px] w-[100%] lg:w-[68%] p-4 bg-white rounded shadow">
+            <div className="bg-[#f5f1e9] lg:px-[100px] w-[100%] lg:w-[68%] p-4 rounded shadow">
                 <h2 className="text-xl font-bold mb-3">Task Details</h2>
                 {taskDetails ? (
                     <div>
@@ -146,9 +146,9 @@ const TaskChat = () => {
                 )}
             </div>
 
-            <div className="flex flex-col w-[100%] lg:w-[30%] h-[550px]">
+            <div className="bg-[#E8F9FF] flex flex-col w-[100%] lg:w-[30%] h-[550px]">
                 {/* Task Details */}
-                <div className="mb-5 w-[100%] p-4 bg-white rounded shadow">
+                <div className="mb-5 w-[100%] p-4 bg-[#BFBBA9] rounded shadow">
                     <div className="flex gap-5 items-center">
                         <h2 className="text-lg font-bold">Task Chat</h2>
                         <h4>{taskId || "N/A"}</h4>
@@ -156,7 +156,7 @@ const TaskChat = () => {
                     </div>
                 </div>
                 {/* Chat Messages */}
-                <div className="flex-1 w-[100%] overflow-y-auto bg-white p-4 rounded shadow">
+                <div className="bg-[#BFBBA9] flex-1 w-[100%] overflow-y-auto p-4 rounded shadow">
                     {messages.length > 0 ? (
                         messages.map((msg, index) => (
                             <div key={index} className={`mb-2 p-2 rounded ${msg.senderId == employeeId ? "bg-blue-100 text-right" : "bg-gray-200"}`}>
@@ -170,11 +170,11 @@ const TaskChat = () => {
                 </div>
 
                 {/* Chat Input */}
-                <div className=" mt-4 w-[100%] flex gap-2">
+                <div className="mt-4 w-[100%] flex gap-2">
                     <div className="w-[80%]">
                         <input
                             type="text"
-                            className="w-full p-2 border rounded"
+                            className="bg-[#FEF9E1] w-full p-2 border rounded"
                             placeholder="Type a message..."
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}

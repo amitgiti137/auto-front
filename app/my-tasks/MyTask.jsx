@@ -264,9 +264,9 @@ const MyTask = () => {
     };
 
     return (
-        <>
+        <div className="bg-[#F0F0D7] h-screen" >
             {/* Period Buttons */}
-            <section className="mt-28">
+            <section className="pt-28">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-wrap justify-center gap-2">
                         {periods.map((period, index) => (
@@ -313,7 +313,7 @@ const MyTask = () => {
 
             {/* Task List */}
             <section className="flex justify-center items-center">
-                <div className="lg:w-[60%] w-[100%] mt-4 p-4 border rounded shadow-md bg-white text-center">
+                <div className="bg-[#D6CFB4] lg:w-[60%] w-[100%] mt-4 p-4 border rounded shadow-md text-center">
                     <h2 className="text-lg font-bold">
                         {selectedPeriod ? `${selectedPeriod} - ${selectedStatus}` : "Select a Period"}
                     </h2>
@@ -323,7 +323,7 @@ const MyTask = () => {
                     {error && <p className="text-red-500">{error}</p>}
 
                     {/* Display tasks dynamically */}
-                    <div className="mt-4">
+                    <div className="bg-[#F5EFFF] mt-4">
                         {filteredTasks.length > 0 ? (
                             <ul className="list-disc list-inside text-left mx-auto w-[80%]">
                                 {filteredTasks.map((task, index) => (
@@ -477,7 +477,7 @@ const MyTask = () => {
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 };
 
