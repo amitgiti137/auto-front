@@ -19,7 +19,7 @@ export default function Dashboard() {
     }, []); */
 
     return (
-        <div>
+        <div className='bg-[#F0F0D7] h-screen'>
             {/* <h1>Dashboard</h1>
             {tasks.map((task) => (
                 <div key={task._id}>
@@ -28,7 +28,7 @@ export default function Dashboard() {
                 </div>
             ))} */}
 
-            <section className="mt-28 mx-[8 px] lg:mx-[125px]">
+            <section className="pt-28 mx-[8 px] lg:mx-[125px]">
                 <div className="container mx-auto">
                     <div className="flex justify-center items-center">
                         <div className="w-full md:w-[24%] lg:w-[24%] bg-[#e3e3e3] rounded-md mb-5">
