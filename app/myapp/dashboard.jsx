@@ -19,7 +19,7 @@ export default function Dashboard() {
     }, []); */
 
     return (
-        <div className='bg-[#F0F0D7] h-screen'>
+        <div className='bg-[#F2F9FF] h-screen'>
             {/* <h1>Dashboard</h1>
             {tasks.map((task) => (
                 <div key={task._id}>
