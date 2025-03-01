@@ -19,20 +19,38 @@ export default function EmployeeList() {
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [newRole, setNewRole] = useState("");
+    const [userRole, setUserRole] =useState("");
 
 
     // ✅ Fetch vendorId from localStorage
     const vendorId = typeof window !== "undefined" ? localStorage.getItem("vendorId") || "" : "";
-    const role = typeof window !== "undefined" ? localStorage.getItem("role") || "" : "";
+    const userEmail = typeof window !== "undefined" ? localStorage.getItem("email") || "" : "";
+    /* const role = typeof window !== "undefined" ? localStorage.getItem("ol") || "" : ""; */
 
     // ✅ Redirect to login if vendorId is missing
     useEffect(() => {
-        if (!vendorId) {
+        if (!vendorId || !userEmail) {
             router.push("/login"); // Redirect to login page
         } else {
+            fetchUserRole();
             fetchEmployees();
         }
-    }, [vendorId]);
+    }, [vendorId, userEmail]);
+
+    const fetchUserRole = async () => {
+        try {
+            const res = await axios.get(`${API_BASE_URL}/api/create/employee_details`, {
+                params: { email: userEmail, vendorId},
+            });
+            if (res.data.status) {
+                setUserRole(res.data.user.role); // ✅ Store role securely
+            } else {
+                console.error("Failed to fetch role.");
+            }
+        } catch (err) {
+            console.error("Error fetching role:", err);
+        }
+    }
 
     const fetchEmployees = async () => {
         setLoading(true);
@@ -65,7 +83,7 @@ export default function EmployeeList() {
             const response = await axios.put(`${API_BASE_URL}/api/create/update_employee`, {
                 email: selectedEmployee.email,
                 vendorId,
-                role, // ✅ Only allow Admins to update
+                userRole, // ✅ Only allow Admins to update
                 newRole,
             });
 
@@ -141,7 +159,7 @@ export default function EmployeeList() {
                                             <div className="flex justify-between items-center w-full min-w-[100px]">
                                                 <span>{emp.role}</span> {/* Role Text */}
                                                 {/* ✅ Show edit button only if role is "Admin" */}
-                                                {role === "Admin" && (
+                                                {userRole === "Admin" && (
                                                     <button
                                                         className="text-blue-500 hover:text-blue-700"
                                                         onClick={() => handleEditClick(emp)}

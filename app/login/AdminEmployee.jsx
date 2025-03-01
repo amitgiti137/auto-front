@@ -79,7 +79,7 @@ export default function AuthForm() {
                     employeeCode: data.admin.employeeCode,
                     activeStatus: data.admin.activeStatus,
                     activeStatus: data.admin.activeStatus,
-                    role: data.admin.role
+                    /* role: data.admin.role */
                 }
                 : {
                     vendorId: data.user.vendorId,
@@ -92,7 +92,7 @@ export default function AuthForm() {
                     designation: data.user.designation,
                     employeeCode: data.user.employeeCode,
                     activeStatus: data.user.activeStatus,
-                    role: data.user.role,
+                    /* role: data.user.role, */
                     token: data.token
                 };
 
@@ -106,7 +106,7 @@ export default function AuthForm() {
             localStorage.setItem("designation", userData.designation);
             localStorage.setItem("employeeCode", userData.employeeCode);
             localStorage.setItem("activeStatus", userData.activeStatus);
-            localStorage.setItem("role", userData.role);
+            /* localStorage.setItem("ol", userData.role); */
             localStorage.setItem("token", userData.token);
 
             // ✅ Update global state using AuthContext

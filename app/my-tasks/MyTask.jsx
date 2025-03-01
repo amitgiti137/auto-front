@@ -1,11 +1,14 @@
 "use client";
 
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
+const API_BASE_URL = "https://automate-business-backend.vercel.app"; // API URL
+
 const MyTask = () => {
-    const [vendorId, setVendorId] = useState(null);
-    const [employeeId, setEmployeeId] = useState(null);
-    const [role, setRole] = useState(null);
+    /* const [vendorId, setVendorId] = useState(null); */
+    
+    const [userRole, setUserRole] = useState("");
     // State for selected period and status
     const [selectedPeriod, setSelectedPeriod] = useState("Today");
     const [selectedStatus, setSelectedStatus] = useState("Pending");
@@ -33,17 +36,19 @@ const MyTask = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [isUserListOpen, setIsUserListOpen] = useState(false);
 
+    const userEmail = typeof window !== "undefined" ? localStorage.getItem("email") || "" : "";
+    const vendorId = typeof window !== "undefined" ? localStorage.getItem("vendorId") || "" : "";
+    const employeeId = typeof window !== "undefined" ? localStorage.getItem("employeeId") || "" : "";
 
 
+    
 
-    // ✅ Read `localStorage` inside `useEffect` to avoid SSR issues
     useEffect(() => {
-        if (typeof window !== "undefined") {
-            setVendorId(localStorage.getItem("vendorId"));
-            setEmployeeId(localStorage.getItem("employeeId"));
-            setRole(localStorage.getItem("role"));
-        }
-    }, []);
+        if (!vendorId || !userEmail) return; // ✅ Prevents early execution
+    
+        fetchUserRole();
+        fetchEmployees();
+    }, [vendorId, userEmail]); 
 
     // List of periods
     const periods = ["Today", "Yesterday", "This Week", "This Month", "Last Month", "Next Week", "Next Month", "All Time", "Custom"];
@@ -51,27 +56,40 @@ const MyTask = () => {
     // List of statuses
     const statuses = ["Pending", "In-Progress", "Completed"];
 
-
-    // ✅ Fetch Employees on Component Mount
-    useEffect(() => {
-        if (!vendorId) return;
-
-        const fetchEmployees = async () => {
-            try {
-                const res = await fetch(`https://automate-ptg5.onrender.com/api/create/employees?vendorId=${vendorId}`);
-                const data = await res.json();
-                if (res.ok) {
-                    setEmployees(data.employees || []);
-                } else {
-                    throw new Error(data.message || "Failed to fetch employees.");
-                }
-            } catch (err) {
-                console.error("Error fetching employees:", err);
+    const fetchUserRole = async () => {
+        try {
+            const res = await axios.get(`${API_BASE_URL}/api/create/employee_details`, {
+                params: { email: userEmail, vendorId},
+            });
+            if (res.data.status) {
+                setUserRole(res.data.user.role); // ✅ Store role securely
+            } else {
+                console.error("Failed to fetch role.");
             }
-        };
+        } catch (err) {
+            console.error("Error fetching role:", err);
+        }
+    }
 
-        fetchEmployees();
-    }, [vendorId]);
+    const fetchEmployees = async () => {
+        setLoading(true);
+        try {
+            const res = await axios.get(`${API_BASE_URL}/api/create/employees?vendorId=${vendorId}`);
+            if (res.data.status) {
+                setEmployees(res.data.employees);
+            } else {
+                setError("Error fetching employees.");
+            }
+        } catch (err) {
+            setError("Failed to fetch employees.");
+            console.error("Error fetching employees:", err);
+        }
+        setLoading(false);
+    };
+    
+
+
+    
 
     // ✅ Fetch Tasks when Component Mounts or when Period Changes
     useEffect(() => {
@@ -170,7 +188,7 @@ const MyTask = () => {
 
             // ✅ Convert updatePayload to FormData while keeping the same name
             const updatePayload = new FormData();
-            updatePayload.append("role", role);
+            updatePayload.append("role", userRole);
             updatePayload.append("title", formData.title);
             updatePayload.append("description", formData.description);
             updatePayload.append("priority", formData.priority);
@@ -180,7 +198,7 @@ const MyTask = () => {
                 updatePayload.append("assignedTo[]", userId); // Append array elements properly
             });
 
-            if (role === "Admin") {
+            if (userRole === "Admin") {
                 updatePayload.append("dueDate", formData.dueDate);
             }
 
@@ -217,7 +235,7 @@ const MyTask = () => {
 
     // ✅ Handle Task Deletion
     const handleDeleteTask = async (taskId) => {
-        if (role !== "Admin") {
+        if (userRole !== "Admin") {
             alert("Only Admins can delete tasks.");
             return;
         }
@@ -226,7 +244,7 @@ const MyTask = () => {
 
         try {
             const response = await fetch(
-                `https://automate-ptg5.onrender.com/api/trash/delete-task/${vendorId}/${taskId}/${role}`,
+                `https://automate-ptg5.onrender.com/api/trash/delete-task/${vendorId}/${taskId}/${userRole}`,
                 {
                     method: "DELETE",
                 }
@@ -327,7 +345,7 @@ const MyTask = () => {
                                             </button>
 
                                             {/* 🗑 Delete Button */}
-                                            {role === "Admin" && (
+                                            {userRole === "Admin" && (
                                                 <button
                                                     className="bg-red-500 text-white px-3 py-1 rounded text-sm"
                                                     onClick={() => handleDeleteTask(task.taskId)}
