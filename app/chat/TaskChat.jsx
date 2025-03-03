@@ -103,8 +103,20 @@ const TaskChat = () => {
                         <p><strong>Status:</strong> {taskDetails.status}</p>
                         <p><strong>Assigned By:</strong> {taskDetails.assignedByName}</p>
                         <p><strong>Assigned To:</strong> {taskDetails.assignedToNames.join(", ")}</p>
-                        
-                        <p className="text-2xl"><strong> {taskDetails.taskResult} </strong></p>
+
+                        {/* <p className="text-2xl"><strong> {taskDetails.taskResult} </strong></p> */}
+                        <p
+                            className={`text-2xl font-bold 
+                                            ${taskDetails.taskResult === "on-time" ? "text-green-500" : ""}
+                                            ${taskDetails.taskResult === "overdue" ? "text-red-500" : ""}
+                                            ${taskDetails.taskResult === "pending" ? "text-orange-500" : ""}
+                                            ${taskDetails.taskResult === "delayed" ? "text-brown-500" : ""}
+                                            ${taskDetails.taskResult === "in-progress" ? "text-yellow-500" : ""}
+                                        `}
+                        >
+                            {taskDetails.taskResult.toUpperCase()}
+                        </p>
+
 
                         {/* Display Attachments if Available */}
                         {taskDetails.attachments && taskDetails.attachments.length > 0 ? (

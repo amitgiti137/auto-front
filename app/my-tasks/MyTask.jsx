@@ -299,7 +299,7 @@ const MyTask = () => {
                 <section className="my-5">
                     <div className="container mx-auto px-4">
                         <div className="flex flex-wrap justify-center gap-3">
-                            {[ 
+                            {[
                                 { key: "overdue", label: "Overdue", count: counts.overdue_count || 0 },
                                 { key: "pending", label: "Pending", count: counts.pending_count || 0 },
                                 { key: "in-progress", label: "In-Progress", count: counts.in_progress_count || 0 },
@@ -380,12 +380,14 @@ const MyTask = () => {
 
                                         {/* Hover Pop-up */}
                                         {hoveredTask && hoveredTask.taskId === task.taskId && (
-                                            <div className="absolute top-0 left-full ml-4 w-60 bg-white shadow-lg p-3 rounded-md border">
+                                            <div className="absolute bottom-0 left-[98%] ml-4 w-60 bg-white shadow-lg p-3 rounded-md border">
                                                 <h3 className="text-md font-bold">{hoveredTask.title}</h3>
                                                 <p className="text-sm text-gray-500">{hoveredTask.description}</p>
                                                 <p className="text-xs text-gray-400 mt-1">Priority: {hoveredTask.priority}</p>
                                                 <p className="text-xs text-gray-400">Status: {hoveredTask.status}</p>
                                                 <p className="text-xs text-gray-400">Due: {hoveredTask.dueDate}</p>
+                                                <p className="text-xs text-gray-400"><strong>Assigned By:</strong> {hoveredTask.assignedByName}</p>
+                                                <p className="text-xs text-gray-400"><strong>Assigned To:</strong> {hoveredTask.assignedToNames.join(", ")}</p>
                                             </div>
                                         )}
                                     </li>
