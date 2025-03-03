@@ -110,7 +110,7 @@ export default function EmployeeList() {
 
     return (
         <section className="bg-[#F0F0D7] ">
-            <div className="h-full container mx-auto px-20 pt-28">
+            <div className="h-screen container mx-auto px-20 pt-28">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Employee List</h2>
                 {/* ✅ Add Member Button to open Modal */}
