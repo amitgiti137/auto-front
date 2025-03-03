@@ -103,6 +103,8 @@ const TaskChat = () => {
                         <p><strong>Status:</strong> {taskDetails.status}</p>
                         <p><strong>Assigned By:</strong> {taskDetails.assignedByName}</p>
                         <p><strong>Assigned To:</strong> {taskDetails.assignedToNames.join(", ")}</p>
+                        
+                        <p className="text-2xl"><strong> {taskDetails.taskResult} </strong></p>
 
                         {/* Display Attachments if Available */}
                         {taskDetails.attachments && taskDetails.attachments.length > 0 ? (

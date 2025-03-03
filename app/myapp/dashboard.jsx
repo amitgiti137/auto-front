@@ -81,7 +81,7 @@ export default function Dashboard() {
                                     <p className="text-gray-600 dark:text-gray-400 text-[10px]">manage all your important company links.</p>
                                 </div>
                             </div>
-                            <Link href="#" className="text-[#FFF] hover:text-[#000000] text-center flex justify-around py-2 mt-3 bg-[#A9B5DF] hover:bg-[#e3e3e3] border-2 border-[#A9B5DF]">Go To Intranet</Link>
+                            <Link href="#" className="text-[#FFF] hover:text-[#000000] text-center flex justify-around py-2 bg-[#A9B5DF] hover:bg-[#e3e3e3] border-2 border-[#A9B5DF]">Go To Intranet</Link>
                         </div>
                         <div className="w-full md:w-[24%] bg-[#e3e3e3] rounded-md overflow-hidden">
                             <div className="flex justify-center items-center pb-3 mt-3">

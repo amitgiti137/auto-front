@@ -7,18 +7,18 @@ const API_BASE_URL = "https://automate-business-backend.vercel.app"; // API URL
 
 const MyTask = () => {
     /* const [vendorId, setVendorId] = useState(null); */
-    
+
     const [userRole, setUserRole] = useState("");
     // State for selected period and status
     const [selectedPeriod, setSelectedPeriod] = useState("Today");
-    const [selectedStatus, setSelectedStatus] = useState("Pending");
+    const [taskResult, setTaskResult] = useState("pending");
 
     // State for tasks fetched from API
     const [tasks, setTasks] = useState([]);
     const [employees, setEmployees] = useState([]); // ✅ Store employee list
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [showAssignedByMe, setShowAssignedByMe] = useState(false); 
+    const [showAssignedByMe, setShowAssignedByMe] = useState(false);
 
     // Edit Modal State
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -41,25 +41,25 @@ const MyTask = () => {
     const employeeId = typeof window !== "undefined" ? localStorage.getItem("employeeId") || "" : "";
 
 
-    
+
 
     useEffect(() => {
         if (!vendorId || !userEmail) return; // ✅ Prevents early execution
-    
+
         fetchUserRole();
         fetchEmployees();
-    }, [vendorId, userEmail]); 
+    }, [vendorId, userEmail]);
 
     // List of periods
     const periods = ["Today", "Yesterday", "This Week", "This Month", "Last Month", "Next Week", "Next Month", "All Time", "Custom"];
 
     // List of statuses
-    const statuses = ["Pending", "In-Progress", "Completed"];
+    const taskResults = ["Overdue", "Pending", "In-Progress", "On-Time", "Delayed"];
 
     const fetchUserRole = async () => {
         try {
             const res = await axios.get(`${API_BASE_URL}/api/create/employee_details`, {
-                params: { email: userEmail, vendorId},
+                params: { email: userEmail, vendorId },
             });
             if (res.data.status) {
                 setUserRole(res.data.user.role); // ✅ Store role securely
@@ -86,10 +86,10 @@ const MyTask = () => {
         }
         setLoading(false);
     };
-    
 
 
-    
+
+
 
     // ✅ Fetch Tasks when Component Mounts or when Period Changes
     useEffect(() => {
@@ -126,7 +126,7 @@ const MyTask = () => {
     };
 
     // ✅ Filter Tasks Based on Selected Status
-    const filteredTasks = tasks.filter(task => task.status === selectedStatus);
+    const filteredTasks = tasks.filter(task => task.taskResult === taskResult);
 
     // ✅ Handle Edit Task Click
     const handleEditClick = (task) => {
@@ -263,6 +263,16 @@ const MyTask = () => {
         }
     };
 
+    // ✅ Calculate Task Counts for Each Status
+    const taskCounts = {
+        "pending": tasks.filter(task => task.taskResult === "pending").length,
+        "in-progress": tasks.filter(task => task.taskResult === "in-progress").length,
+        "on-time": tasks.filter(task => task.taskResult === "on-time").length,
+        "delayed": tasks.filter(task => task.taskResult === "delayed").length,
+        "overdue": tasks.filter(task => task.taskResult === "overdue").length,
+    };
+
+
     return (
         <div className="bg-[#F0F0D7] h-screen" >
             {/* Period Buttons */}
@@ -287,15 +297,16 @@ const MyTask = () => {
                 <section className="my-5">
                     <div className="container mx-auto px-4">
                         <div className="flex flex-wrap justify-center gap-3">
-                            {statuses.map((status, index) => (
+                            {Object.entries(taskCounts).map(([key, count], index) => (
                                 <button
                                     key={index}
-                                    className={`text-[12px] rounded-full px-3 py-1 transition ${selectedStatus === status ? "bg-blue-500 text-white font-bold" : "bg-gray-100"}`}
-                                    onClick={() => setSelectedStatus(status)}
+                                    className={`text-[12px] rounded-full px-3 py-1 transition ${taskResult === key ? "bg-blue-500 text-white font-bold" : "bg-gray-100"}`}
+                                    onClick={() => setTaskResult(key)}
                                 >
-                                    {status}
+                                    {key.replace("-", " ").toUpperCase()} - {count}
                                 </button>
                             ))}
+
                         </div>
                     </div>
                 </section>
@@ -315,7 +326,7 @@ const MyTask = () => {
             <section className="flex justify-center items-center">
                 <div className="bg-[#D6CFB4] lg:w-[60%] w-[100%] mt-4 p-4 border rounded shadow-md text-center">
                     <h2 className="text-lg font-bold">
-                        {selectedPeriod ? `${selectedPeriod} - ${selectedStatus}` : "Select a Period"}
+                        {selectedPeriod ? `${selectedPeriod} - ${taskResult}` : "Select a Period"}
                     </h2>
 
                     {/* Loading & Error Handling */}
@@ -341,7 +352,7 @@ const MyTask = () => {
                                                 className="bg-yellow-500 text-white px-3 py-1 rounded text-sm"
                                                 onClick={() => handleEditClick(task)}
                                             >
-                                                ✏ Edit
+                                                ✏
                                             </button>
 
                                             {/* 🗑 Delete Button */}
@@ -350,12 +361,12 @@ const MyTask = () => {
                                                     className="bg-red-500 text-white px-3 py-1 rounded text-sm"
                                                     onClick={() => handleDeleteTask(task.taskId)}
                                                 >
-                                                    🗑 Delete
+                                                    🗑
                                                 </button>
                                             )}
                                             {/* ➡ Chat Button */}
                                             <a href={`/chat?taskId=${task.taskId}`} className="bg-blue-500 text-white px-3 py-1 rounded text-sm">
-                                                💬 Chat
+                                                💬
                                             </a>
                                         </div>
 
