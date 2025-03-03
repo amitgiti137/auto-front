@@ -14,6 +14,7 @@ const MyTask = () => {
     const [taskResult, setTaskResult] = useState("pending");
 
     // State for tasks fetched from API
+    const [counts, setCounts] = useState([]);
     const [tasks, setTasks] = useState([]);
     const [employees, setEmployees] = useState([]); // ✅ Store employee list
     const [loading, setLoading] = useState(false);
@@ -118,6 +119,7 @@ const MyTask = () => {
 
             const data = await response.json();
             setTasks(data.tasks || []); // Store fetched tasks in state
+            setCounts(data.taskCounts || []);
         } catch (err) {
             setError(err.message);
         } finally {
@@ -264,13 +266,13 @@ const MyTask = () => {
     };
 
     // ✅ Calculate Task Counts for Each Status
-    const taskCounts = {
+    /* const taskCounts = {
+        "overdue": tasks.filter(task => task.taskResult === "overdue").length,
         "pending": tasks.filter(task => task.taskResult === "pending").length,
         "in-progress": tasks.filter(task => task.taskResult === "in-progress").length,
         "on-time": tasks.filter(task => task.taskResult === "on-time").length,
         "delayed": tasks.filter(task => task.taskResult === "delayed").length,
-        "overdue": tasks.filter(task => task.taskResult === "overdue").length,
-    };
+    }; */
 
 
     return (
@@ -297,13 +299,19 @@ const MyTask = () => {
                 <section className="my-5">
                     <div className="container mx-auto px-4">
                         <div className="flex flex-wrap justify-center gap-3">
-                            {Object.entries(taskCounts).map(([key, count], index) => (
+                            {[ 
+                                { key: "overdue", label: "Overdue", count: counts.overdue_count || 0 },
+                                { key: "pending", label: "Pending", count: counts.pending_count || 0 },
+                                { key: "in-progress", label: "In-Progress", count: counts.in_progress_count || 0 },
+                                { key: "on-time", label: "On-Time", count: counts.completed_in_time_count || 0 },
+                                { key: "delayed", label: "Delayed", count: counts.delayed_count || 0 },
+                            ].map(({ key, label, count }, index) => (
                                 <button
                                     key={index}
                                     className={`text-[12px] rounded-full px-3 py-1 transition ${taskResult === key ? "bg-blue-500 text-white font-bold" : "bg-gray-100"}`}
                                     onClick={() => setTaskResult(key)}
                                 >
-                                    {key.replace("-", " ").toUpperCase()} - {count}
+                                    {label} - {count}
                                 </button>
                             ))}
 
