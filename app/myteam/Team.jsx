@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { FaEdit } from "react-icons/fa"; // ✅ Import edit icon
 import CreateTeamForm from "./CreateTeam";
 
-const API_BASE_URL = "https://automate-business-backend.vercel.app"; // API URL
+const API_BASE_URL = "https://automate-ptg5.onrender.com"; // API URL
 
 export default function EmployeeList() {
     const { user } = useAuth(); // Get logged-in user
@@ -110,7 +110,7 @@ export default function EmployeeList() {
 
     return (
         <section className="bg-[#F0F0D7] ">
-            <div className="h-screen container mx-auto px-20 pt-28">
+            <div className="h-full container mx-auto px-20 pt-28">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Employee List</h2>
                 {/* ✅ Add Member Button to open Modal */}

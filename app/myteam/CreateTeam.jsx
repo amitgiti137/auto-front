@@ -3,8 +3,18 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import axios from "axios";
+
+const API_BASE_URL = "https://automate-ptg5.onrender.com";
 
 export default function CreateTeamForm({ closeModal }) {
+
+    const userEmail = typeof window !== "undefined" ? localStorage.getItem("email") || "" : "";
+    const vendorId = typeof window !== "undefined" ? localStorage.getItem("vendorId") || "" : "";
+    const employeeId = typeof window !== "undefined" ? localStorage.getItem("employeeId") || "" : "";
+
+    
+    const [userRole, setUserRole] = useState("");
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -16,31 +26,54 @@ export default function CreateTeamForm({ closeModal }) {
         designation: "",
         employeeCode: "",
         activeStatus: "",
-        vendorId: "", // ✅ Will be set from localStorage
+        vendorId: vendorId, // ✅ Will be set from localStorage
         role: ""
     });
 
+    
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const router = useRouter();
 
-    // ✅ Fetch vendorId from localStorage on component mount
+    
+
+    
+
     useEffect(() => {
-        if (typeof window !== "undefined") {
-            const storedVendorId = localStorage.getItem("vendorId");
-            const storedrole = localStorage.getItem("role");
-            if (storedVendorId, storedrole) {
-                setFormData(prev => ({ ...prev, vendorId: storedVendorId, role: storedrole }));
-            }
-        }
-    }, []);
+        if (!vendorId || !userEmail) return; // ✅ Prevents early execution
+
+        fetchUserRole();
+    }, [vendorId, userEmail]);
+
+    useEffect(() => {
+        // ✅ Update role in formData when userRole is set
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            role: userRole
+        }));
+    }, [userRole]);
 
     // ✅ Handle Input Changes
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    const fetchUserRole = async () => {
+        try {
+            const res = await axios.get(`${API_BASE_URL}/api/create/employee_details`, {
+                params: { email: userEmail, vendorId },
+            });
+            if (res.data.status) {
+                setUserRole(res.data.user.role); // ✅ Store role securely
+            } else {
+                console.error("Failed to fetch role.");
+            }
+        } catch (err) {
+            console.error("Error fetching role:", err);
+        }
+    }
 
     // ✅ Handle Signup Form Submission
     const handleSubmit = async (e) => {
@@ -57,9 +90,10 @@ export default function CreateTeamForm({ closeModal }) {
             setError("Vendor ID is missing. Please refresh and try again.");
             return;
         }
+        console.log(vendorId);
 
         try {
-            const response = await fetch("https://automate-business-backend.vercel.app/api/create/register_employee", {
+            const response = await fetch("https://automate-ptg5.onrender.com/api/create/register_employee", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
@@ -96,7 +130,7 @@ export default function CreateTeamForm({ closeModal }) {
         } catch (error) {
             setError(error.message);
         }
-    }; 
+    };
 
     return (
         <div className="min-h-screen pt-1 flex items-center justify-center bg-gray-100">
