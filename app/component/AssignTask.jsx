@@ -178,7 +178,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
             onClick={() => setIsOpen(false)}
         >
             <div
-                className="bg-white p-6 rounded-lg shadow-lg w-[60%] relative"
+                className="bg-white p-3 lg:p-6 rounded-lg shadow-lg w-[100%] lg:w-[60%] relative"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Close Button */}

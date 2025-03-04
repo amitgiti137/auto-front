@@ -89,7 +89,7 @@ const TaskChat = () => {
     };
 
     return (
-        <div className="bg-[#F0F0D7] lg:ms-[70px] pt-20 flex flex-wrap justify-between">
+        <div className="bg-[#F0F0D7] lg:ms-[70px] pt-20 flex flex-wrap justify-between relative">
             {/* Left Side - Task Details */}
             <div className="bg-[#f5f1e9] lg:px-[100px] w-[100%] lg:w-[68%] p-4 rounded shadow">
                 <h2 className="text-xl font-bold mb-3">Task Details</h2>
@@ -160,7 +160,7 @@ const TaskChat = () => {
                 )}
             </div>
 
-            <div className="bg-[#E8F9FF] flex flex-col w-[100%] lg:w-[30%] h-[550px]">
+            <div className="bg-[#E8F9FF] flex flex-col w-[100%] lg:w-[30%] h-screen">
                 {/* Task Details */}
                 <div className="mb-5 w-[100%] p-4 bg-[#BFBBA9] rounded shadow">
                     <div className="flex gap-5 items-center">
@@ -184,7 +184,7 @@ const TaskChat = () => {
                 </div>
 
                 {/* Chat Input */}
-                <div className="mt-4 w-[100%] flex gap-2">
+                <div className="bottom-1 right-0 mt-4 w-[100%] flex gap-2">
                     <div className="w-[80%]">
                         <input
                             type="text"

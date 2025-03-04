@@ -25,7 +25,7 @@ export default function RightSidebar() {
       <aside className={`fixed top-0 lg:left-[5%] left-0 h-full bg-gradient-to-r from-[#ad9e9e] to-[#C8AAAA] transition-transform transform ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:w-[11%] w-[75%] shadow-lg z-40 p-1`}>
         {/* <h2 className="text-md font-bold text-gray-900 mb-4">Task Management</h2> */}
         
-        <nav className="text-gray-700">
+        <nav className="mt-16 text-gray-700">
           <TaskItem text="Assign Task" icon={<FiClipboard/>} 
           onClick={() => {
             setIsPopupOpen(true); // Open popup

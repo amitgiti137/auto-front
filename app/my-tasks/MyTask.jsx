@@ -2,6 +2,8 @@
 
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { FaEdit } from "react-icons/fa"; // ✅ Import edit icon
+
 
 const API_BASE_URL = "https://automate-business-backend.vercel.app"; // API URL
 
@@ -279,7 +281,7 @@ const MyTask = () => {
         <div className="bg-[#F0F0D7] h-screen" >
             {/* Period Buttons */}
             <section className="pt-28">
-                <div className="container mx-auto px-4">
+                <div className="container mx-auto px-1">
                     <div className="flex flex-wrap justify-center gap-2">
                         {periods.map((period, index) => (
                             <button
@@ -297,7 +299,7 @@ const MyTask = () => {
             {/* Status Filter Buttons */}
             {selectedPeriod && (
                 <section className="my-5">
-                    <div className="container mx-auto px-4">
+                    <div className="container mx-auto px-1">
                         <div className="flex flex-wrap justify-center gap-3">
                             {[
                                 { key: "overdue", label: "Overdue", count: counts.overdue_count || 0 },
@@ -342,9 +344,9 @@ const MyTask = () => {
                     {error && <p className="text-red-500">{error}</p>}
 
                     {/* Display tasks dynamically */}
-                    <div className="bg-[#F5EFFF] mt-4">
+                    <div className="bg-[#F5EFFF] mt-4 relative">
                         {filteredTasks.length > 0 ? (
-                            <ul className="list-disc list-inside text-left mx-auto w-[80%]">
+                            <ul className="list-disc list-inside text-left mx-auto w-[95%]">
                                 {filteredTasks.map((task, index) => (
                                     <li key={index}
                                         className="flex justify-between items-center text-gray-700 py-2 border-b relative"
@@ -357,30 +359,30 @@ const MyTask = () => {
                                         {/* Buttons */}
                                         <div className="flex gap-2">
                                             <button
-                                                className="bg-yellow-500 text-white px-3 py-1 rounded text-sm"
+                                                className="bg-yellow-500 text-white px-2 py-1 rounded text-sm"
                                                 onClick={() => handleEditClick(task)}
                                             >
-                                                ✏
+                                                <FaEdit />
                                             </button>
 
                                             {/* 🗑 Delete Button */}
                                             {userRole === "Admin" && (
                                                 <button
-                                                    className="bg-red-500 text-white px-3 py-1 rounded text-sm"
+                                                    className="bg-red-500 text-white px-2 py-1 rounded text-sm"
                                                     onClick={() => handleDeleteTask(task.taskId)}
                                                 >
                                                     🗑
                                                 </button>
                                             )}
                                             {/* ➡ Chat Button */}
-                                            <a href={`/chat?taskId=${task.taskId}`} className="bg-blue-500 text-white px-3 py-1 rounded text-sm">
+                                            <a href={`/chat?taskId=${task.taskId}`} className="bg-blue-500 text-white px-1 py-1 rounded text-sm">
                                                 💬
                                             </a>
                                         </div>
 
                                         {/* Hover Pop-up */}
                                         {hoveredTask && hoveredTask.taskId === task.taskId && (
-                                            <div className="absolute bottom-0 left-[98%] ml-4 w-60 bg-white shadow-lg p-3 rounded-md border">
+                                            <div className="absolute lg:bottom-0 bottom-[100%] left-[0%] lg:left-[98%] ml-4 w-60 bg-white shadow-lg p-3 rounded-md border">
                                                 <h3 className="text-md font-bold">{hoveredTask.title}</h3>
                                                 <p className="text-sm text-gray-500">{hoveredTask.description}</p>
                                                 <p className="text-xs text-gray-400 mt-1">Priority: {hoveredTask.priority}</p>

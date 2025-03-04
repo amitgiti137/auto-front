@@ -125,7 +125,7 @@ export default function AuthForm() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="min-h-screen pt-20 flex items-center justify-center bg-gray-100">
             <div className="bg-white p-6 rounded-lg shadow-lg w-[100%] lg:w-[65%] border border-gray-300">
                 {/* Logo */}
                 <div className="flex justify-center mb-1">
