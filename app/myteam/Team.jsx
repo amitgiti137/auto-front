@@ -83,7 +83,7 @@ export default function EmployeeList() {
             const response = await axios.put(`${API_BASE_URL}/api/create/update_employee`, {
                 email: selectedEmployee.email,
                 vendorId,
-                userRole, // ✅ Only allow Admins to update
+                role: userRole, // ✅ Only allow Admins to update
                 newRole,
             });
 
@@ -95,8 +95,7 @@ export default function EmployeeList() {
                 alert(response.data.message || "Failed to update role.");
             }
         } catch (err) {
-            console.error("Error updating role:", err);
-            alert("Error updating role. Please try again.");
+            alert("The first Admin's role cannot be changed.");
         }
     };
 
