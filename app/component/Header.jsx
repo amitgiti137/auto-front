@@ -43,7 +43,7 @@ export default function Header() {
             <div className="flex items-center mx-auto lg:ps-[110px]">
                 <img src="/img/logo.jpg" alt="Logo" className="h-12 lg:mt-0 mt-5" />
                 <div>
-                <h1 className="text-xl font-semibold text-gray-800 dark:text-white ml-3">I <span className="text-blue-500">A</span><span className="text-green-500">M</span> IT Planet</h1>
+                <h1 className="text-xl font-semibold text-gray-800 dark:text-white ml-3">I <span className="text-blue-500">A</span><span className="text-green-500">M</span> IT Plan-<span className="text-blue-500">I</span>t</h1>
                 <p className="text-[12px] px-3">Integrated <span className="text-blue-500">Auto</span><span className="text-green-500">mate</span> Information Transfer</p>
                 </div>
             </div>
