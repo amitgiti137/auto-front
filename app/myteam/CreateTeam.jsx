@@ -26,8 +26,9 @@ export default function CreateTeamForm({ closeModal }) {
         designation: "",
         employeeCode: "",
         activeStatus: "",
-        vendorId: vendorId, // ✅ Will be set from localStorage
-        role: ""
+        vendorId: vendorId || "", // ✅ Will be set from localStorage
+        role: "",
+        otp: "",
     });
 
     
@@ -38,7 +39,27 @@ export default function CreateTeamForm({ closeModal }) {
     const router = useRouter();
 
     
+    const sendOtp = async (e) => {
+        e.preventDefault(); // Prevent form submission
 
+        if (!formData.email) {
+            alert("Please enter your email before requesting OTP.");
+            return;
+        }
+
+        try {
+            const res = await axios.post(`https://automate-business-backend.vercel.app/api/create/send_otp`, {
+                email: formData.email
+            });
+
+            if (res.status === 200) {
+                alert("OTP sent to your email address");
+            }
+        } catch (error) {
+            console.error("Error sending OTP:", error);
+            alert("Failed to send OTP. Please try again.");
+        }
+    };
     
 
     useEffect(() => {
@@ -48,16 +69,17 @@ export default function CreateTeamForm({ closeModal }) {
     }, [vendorId, userEmail]);
 
     useEffect(() => {
-        // ✅ Update role in formData when userRole is set
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            role: userRole
-        }));
+        if (userRole) { // ✅ Ensure userRole exists before updating
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                role: userRole || "" // ✅ Ensure it's always a string
+            }));
+        }
     }, [userRole]);
 
     // ✅ Handle Input Changes
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({ ...formData, [e.target.name]: e.target.value || "", });
     };
 
     const fetchUserRole = async () => {
@@ -134,7 +156,7 @@ export default function CreateTeamForm({ closeModal }) {
 
     return (
         <div className="min-h-screen pt-1 flex items-center justify-center bg-gray-100">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-[100%] lg:w-[65%] border border-gray-300">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-[100%]  border border-gray-300">
                 {/* Logo */}
                 <div className="flex justify-center mb-1">
                     <img src="/img/logo.jpg" alt="Automate Business" className="h-10" />
@@ -266,6 +288,29 @@ export default function CreateTeamForm({ closeModal }) {
                                 required
                             />
                         </div>
+
+                        <div className="w-full lg:w-1/2 mb-3 relative">
+                                    <label className="text-gray-700 text-sm">OTP</label>
+                                    <div className="flex items-center border rounded mt-1">
+                                        <input
+                                            type="text"
+                                            name="otp"
+                                            className="w-full p-2 focus:outline-none"
+                                            placeholder="Enter OTP"
+                                            value={formData.otp || ""}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="button" // Prevent form submission
+                                    className="w-full lg:w-1/2 mt-7 mb-3 focus:outline-none focus:ring-2 focus:ring-green-400 bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition"
+                                    onClick={sendOtp} // ✅ Call sendOtp function
+                                >
+                                    Send OTP
+                                </button>
                     </div>
 
                     {/* Password Fields */}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext"; // ✅ Import Auth Context
+import axios from "axios";
 
 export default function AuthForm() {
     const [isSignup, setIsSignup] = useState(false);
@@ -19,7 +20,8 @@ export default function AuthForm() {
         employeeCode: "",
         activeStatus: "",
         vendorId: "", // ✅ Required for employees
-        role: ""
+        role: "",
+        otp: "",
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -32,6 +34,29 @@ export default function AuthForm() {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    const sendOtp = async (e) => {
+        e.preventDefault(); // Prevent form submission
+
+        if (!formData.email) {
+            alert("Please enter your email before requesting OTP.");
+            return;
+        }
+
+        try {
+            const res = await axios.post(`https://automate-business-backend.vercel.app/api/create/send_otp`, {
+                email: formData.email
+            });
+
+            if (res.status === 200) {
+                alert("OTP sent to your email address");
+            }
+        } catch (error) {
+            console.error("Error sending OTP:", error);
+            alert("Failed to send OTP. Please try again.");
+        }
+    };
+
 
     // Handle Form Submission
     const handleSubmit = async (e) => {
@@ -241,7 +266,7 @@ export default function AuthForm() {
                                 </div>
                             </div>
 
-                            
+
 
                             {/* Email & WhatsApp Number in Same Row (Desktop) or Full Width (Mobile) */}
                             <div className="flex flex-col lg:flex-row gap-4">
@@ -275,6 +300,29 @@ export default function AuthForm() {
                                         />
                                     </div>
                                 </div>
+
+                                <div className="w-full lg:w-1/2 mb-3 relative">
+                                    <label className="text-gray-700 text-sm">OTP</label>
+                                    <div className="flex items-center border rounded mt-1">
+                                        <input
+                                            type="text"
+                                            name="otp"
+                                            className="w-full p-2 focus:outline-none"
+                                            placeholder="Enter OTP"
+                                            value={formData.otp}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="button" // Prevent form submission
+                                    className="w-full lg:w-1/2 mt-7 mb-3 focus:outline-none focus:ring-2 focus:ring-green-400 bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition"
+                                    onClick={sendOtp} // ✅ Call sendOtp function
+                                >
+                                    Send OTP
+                                </button>
                             </div>
                         </>
                     )}
