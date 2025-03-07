@@ -156,7 +156,7 @@ export default function CreateTeamForm({ closeModal }) {
 
     return (
         <div className="min-h-screen pt-1 flex items-center justify-center bg-gray-100">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-[100%]  border border-gray-300">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-[100%]  border border-gray-300 relative">
                 {/* Logo */}
                 <div className="flex justify-center mb-1">
                     <img src="/img/logo.jpg" alt="Automate Business" className="h-10" />

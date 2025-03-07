@@ -6,6 +6,8 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext"; // ✅ Import Auth Context
 import axios from "axios";
 
+const API_BASE_URL = "https://automate-ptg5.onrender.com"; // API URL
+
 export default function AuthForm() {
     const [isSignup, setIsSignup] = useState(false);
     const [formData, setFormData] = useState({
@@ -44,7 +46,7 @@ export default function AuthForm() {
         }
 
         try {
-            const res = await axios.post(`https://automate-business-backend.vercel.app/api/create/send_otp`, {
+            const res = await axios.post(`${API_BASE_URL}/api/create/send_otp`, {
                 email: formData.email
             });
 
@@ -71,8 +73,8 @@ export default function AuthForm() {
 
         try {
             const endpoint = isSignup
-                ? "https://automate-business-backend.vercel.app/api/create/register_admin"
-                : "https://automate-business-backend.vercel.app/api/create/login";
+                ? `${API_BASE_URL}/api/create/register_admin`
+                : `${API_BASE_URL}/api/create/login`;
 
             const payload = isSignup
                 ? { ...formData }

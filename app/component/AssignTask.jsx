@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { FaTrash } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io"; 
 
-const API_BASE_URL = "https://automate-ptg5.onrender.com"; // API URL
+const API_BASE_URL = "http://localhost:5000"; // API URL
 
 export default function AssignTask({ isOpen, setIsOpen }) {
     const { user } = useAuth(); // Get logged-in user
@@ -155,7 +155,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
             setDescription("");
             setSelectedUsers([]);
             setCategory("");
-            setPriority("high");
+            setPriority("High");
             setDueDate("");
             setFiles([]);
             setIsOpen(false); // Close popup after successful creation
