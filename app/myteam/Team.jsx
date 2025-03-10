@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 import { FaEdit } from "react-icons/fa"; // ✅ Import edit icon
 import CreateTeamForm from "./CreateTeam";
+import Image from "next/image";
 
 const API_BASE_URL = "https://automate-ptg5.onrender.com"; // API URL
 
@@ -133,7 +134,7 @@ export default function EmployeeList() {
 
     return (
         <section className="bg-[#F0F0D7] ">
-            <div className="h-screen container mx-auto px-1 lg:px-20 pt-28">
+            <div className="container mx-auto px-1 lg:px-20 pt-28 pb-10">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-bold">Employee List</h2>
                     {/* ✅ Add Member Button to open Modal */}
@@ -276,6 +277,14 @@ export default function EmployeeList() {
                         </div>
                     </div>
                 )}
+            </div>
+            <div>
+                <Image src = "/img/number-add.png"
+                    width="1053"
+                    height="513"
+                    alt="set numner for team"
+                    className="flex items-center justify-center mx-auto px-2 pb-10"
+                ></Image>
             </div>
         </section>
     );
