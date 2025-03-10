@@ -154,17 +154,17 @@ export default function EmployeeList() {
                     <p className="text-gray-500">Loading employees...</p>
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="w-full border-collapse border border-gray-300 text-sm lg:text-base">
+                        <table className="w-full border-collapse border border-gray-300 text-sm">
                             <thead>
                                 <tr className="bg-gray-200">
-                                    <th className="border border-gray-300 px-4 py-2">Employee ID</th>
-                                    <th className="border border-gray-300 px-4 py-2">Name</th>
-                                    <th className="border border-gray-300 px-4 py-2">Email</th>
-                                    <th className="border border-gray-300 px-4 py-2">Department</th>
-                                    <th className="border border-gray-300 px-4 py-2">Designation</th>
-                                    <th className="border border-gray-300 px-4 py-2">Employee Code</th>
-                                    <th className="border border-gray-300 px-4 py-2">Status</th>
-                                    <th className="border border-gray-300 px-4 py-2">Role</th>
+                                    <th className="border border-gray-300 px-2 py-2">Employee ID</th>
+                                    <th className="border border-gray-300 px-2 py-2">Name</th>
+                                    <th className="border border-gray-300 px-2 py-2">Email</th>
+                                    <th className="border border-gray-300 px-2 py-2">Department</th>
+                                    <th className="border border-gray-300 px-2 py-2">Designation</th>
+                                    <th className="border border-gray-300 px-2 py-2">Employee Code</th>
+                                    <th className="border border-gray-300 px-2 py-2">Status</th>
+                                    <th className="border border-gray-300 px-2 py-2">Role</th>
                                     {userRole === "Admin" && (
                                         <th className="border border-gray-300 px-4 py-2">Remove</th>
                                     )}
@@ -175,17 +175,17 @@ export default function EmployeeList() {
                                 {employees.length > 0 ? (
                                     employees.map((emp) => (
                                         <tr key={emp.employeeId} className="text-center">
-                                            <td className="border border-gray-300 px-4 py-2">{emp.employeeId}</td>
-                                            <td className="border border-gray-300 px-4 py-2">{emp.firstName} {emp.lastName}</td>
-                                            <td className="border border-gray-300 px-4 py-2">{emp.email}</td>
-                                            <td className="border border-gray-300 px-4 py-2">{emp.department}</td>
-                                            <td className="border border-gray-300 px-4 py-2">{emp.designation}</td>
-                                            <td className="border border-gray-300 px-4 py-2">{emp.employeeCode}</td>
-                                            <td className={`border border-gray-300 px-4 py-2 ${emp.activeStatus === "Active" ? "text-green-600" : "text-red-600"}`}>
+                                            <td className="border border-gray-300 px-2 py-2">{emp.employeeId}</td>
+                                            <td className="border border-gray-300 px-2 py-2">{emp.firstName} {emp.lastName}</td>
+                                            <td className="border border-gray-300 px-2 py-2">{emp.email}</td>
+                                            <td className="border border-gray-300 px-2 py-2">{emp.department}</td>
+                                            <td className="border border-gray-300 px-2 py-2">{emp.designation}</td>
+                                            <td className="border border-gray-300 px-2 py-2">{emp.employeeCode}</td>
+                                            <td className={`border border-gray-300 px-2 py-2 ${emp.activeStatus === "Active" ? "text-green-600" : "text-red-600"}`}>
                                                 {emp.activeStatus}
                                             </td>
-                                            <td className="border border-gray-300 px-4 py-2">
-                                                <div className={`flex items-center w-full min-w-[100px] ${userRole === "Admin" ? "justify-between" : "justify-center"}`}>
+                                            <td className="border border-gray-300 px-2 py-2">
+                                                <div className={`flex items-center w-full min-w-[30px] ${userRole === "Admin" ? "justify-between" : "justify-center"}`}>
                                                     <span>{emp.role}</span> {/* Role Text */}
                                                     {/* ✅ Show edit button only if role is "Admin" */}
                                                     {userRole === "Admin" && (
@@ -200,9 +200,9 @@ export default function EmployeeList() {
                                             </td>
                                             {/* ✅ New Column: Delete Employee Button (Only for Admin) */}
                                             {userRole === "Admin" && emp.role !== "Admin" && (
-                                                <td className="border border-gray-300 px-4 py-2">
+                                                <td className="border border-gray-300 px-2 py-2">
                                                     <button
-                                                        className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition"
+                                                        className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition"
                                                         onClick={() => handleDeleteEmployee(emp)}
                                                     >
                                                         🗑
