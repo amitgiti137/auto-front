@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa"; // ✅ Import edit icon
 
 
-const API_BASE_URL = "https://automate-business-backend.vercel.app"; // API URL
+const API_BASE_URL = "https://automate-ptg5.onrender.com"; // API URL
 
 const MyTask = () => {
     /* const [vendorId, setVendorId] = useState(null); */
@@ -113,8 +113,8 @@ const MyTask = () => {
 
         try {
             const url = showAssignedByMe
-                ? `https://automate-ptg5.onrender.com/api/taskall/assigned-by/${vendorId}/${employeeId}`
-                : `https://automate-ptg5.onrender.com/api/taskall/assigned-to/${vendorId}/${employeeId}`;
+                ? `${API_BASE_URL}/api/taskall/assigned-by/${vendorId}/${employeeId}`
+                : `${API_BASE_URL}/api/taskall/assigned-to/${vendorId}/${employeeId}`;
 
             const response = await fetch(url);
             if (!response.ok) throw new Error("Failed to fetch tasks.");
@@ -248,7 +248,7 @@ const MyTask = () => {
 
         try {
             const response = await fetch(
-                `https://automate-ptg5.onrender.com/api/trash/delete-task/${vendorId}/${taskId}/${userRole}`,
+                `${API_BASE_URL}/api/trash/delete-task/${vendorId}/${taskId}/${userRole}`,
                 {
                     method: "DELETE",
                 }

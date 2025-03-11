@@ -138,7 +138,7 @@ export default function AssignTask({ isOpen, setIsOpen }) {
         }   
 
         try {
-            const response = await fetch(`https://automate-ptg5.onrender.com/api/taskall/`, {
+            const response = await fetch(`${API_BASE_URL}/api/taskall/`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -149,7 +149,10 @@ export default function AssignTask({ isOpen, setIsOpen }) {
             const data = await response.json(); // ✅ First parse JSON response
             console.log("API Response:", response.data);
 
-            if (!response.ok) throw new Error(data.error || "Failed to create task");
+            if (!response.ok) {
+                setError(data.error || "Failed to create task"); // ✅ Set error state instead of throwing an error
+                return;
+            }
 
             setTaskTitle("");
             setDescription("");
