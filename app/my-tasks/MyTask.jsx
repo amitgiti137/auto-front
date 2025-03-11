@@ -216,7 +216,7 @@ const MyTask = () => {
 
 
             const response = await fetch(
-                `https://automate-ptg5.onrender.com/api/taskall/reassign/${vendorId}/${selectedTask.taskId}`,
+                `${API_BASE_URL}/api/taskall/reassign/${vendorId}/${selectedTask.taskId}`,
                 {
                     method: "PUT",
                     body: updatePayload,
