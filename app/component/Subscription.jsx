@@ -35,7 +35,7 @@ export default function SubscriptionPage() {
         setError("");
 
         try {
-            const orderResponse = await axios.post(`${API_BASE_URL}/api/paysubs/create-order`, {
+            const orderResponse = await axios.post(`${API_BASE_URL}/api/paysubs/create_order`, {
                 vendorId,
                 planType,
             });
@@ -56,7 +56,7 @@ export default function SubscriptionPage() {
                 },
                 handler: async function (response) {
                     try {
-                        const verifyResponse = await axios.post(`${API_BASE_URL}/api/paysubs/verify-payment`, {
+                        const verifyResponse = await axios.post(`${API_BASE_URL}/api/paysubs/verify_payment`, {
                             vendorId,
                             order_id: response.razorpay_order_id,
                             payment_id: response.razorpay_payment_id,
