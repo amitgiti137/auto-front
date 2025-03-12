@@ -33,11 +33,12 @@ export default function SubscriptionPage() {
     const handleSubscription = async (planType) => {
         setLoading(true);
         setError("");
+        
 
         try {
             const orderResponse = await axios.post(`${API_BASE_URL}/api/paysubs/create_order`, {
                 vendorId,
-                planType,
+                plan: planType,
             });
 
             const { orderId, amount } = orderResponse.data;
@@ -61,7 +62,7 @@ export default function SubscriptionPage() {
                             order_id: response.razorpay_order_id,
                             payment_id: response.razorpay_payment_id,
                             signature: response.razorpay_signature,
-                            planType,
+                            plan: planType,
                         });
 
                         alert(verifyResponse.data.message);
