@@ -48,26 +48,31 @@ export default function Subscription() {
     const handleSubscription = async (subscriptionType) => {
         setLoading(true);
         setError("");
-
+    
         try {
             const vendorId = localStorage.getItem("vendorId");
+            console.log("📤 Sending request to backend with:", { vendorId, subscriptionType });
+    
             const response = await axios.post(`${API_BASE_URL}/api/ezzbuzz/create_payment_link`, {
-                vendorId,
-                subscriptionType
+                vendorId: vendorId, // ✅ Ensure vendorId is correctly passed
+                subscriptionType: subscriptionType // ✅ Ensure correct property name
             });
-
+    
+            console.log("✅ Payment API Response:", response.data);
+    
             if (response.data.payment_url) {
                 window.location.href = response.data.payment_url; // ✅ Redirect to EzzBuzz Checkout
             } else {
                 setError("Failed to generate payment link.");
             }
         } catch (error) {
-            console.error("Payment error:", error);
+            console.error("❌ Payment error:", error.response ? error.response.data : error.message);
             setError("Payment processing failed.");
         } finally {
             setLoading(false);
         }
     };
+    
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
